@@ -31,3 +31,4 @@ My main goal of this major project is to create a game taken by insiration by pa
 -Level up system
 -Animation for placing ingridients(such as chopping)
 -Sauce Physics!(Or ingredient placing in general)
+-special customers
