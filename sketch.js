@@ -25,15 +25,16 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   background(backg);
   let salmonPlace = new Ingredients(mouseX, mouseY, salmon);
-  let eggBasket = new Basket(windowWidth/2 windowHeight/2);
+  let placeEggBasket = new Basket(windowWidth/2, windowHeight/2, eggBasket);
   ingredient.push(salmonPlace);
+  ingredient.push(placeEggBasket);
 }
 
 function draw() {
   for(let i of ingredient) {
     i.display();
   }
-
+  
 }
 function mousePressed() {
   let place = new Ingredients(mouseX, mouseY, salmon);
@@ -66,9 +67,8 @@ class Basket {
   display(){
     image(this.type, this.x, this.y);
   }
-}
-
-function isInBasket(x, y, top, bottom, left, right) {
-  return x >= left && x <=right && (y <= bottom && y >= top);
+  isInBasket(x, y, top, bottom, left, right) {
+    return x >= left && x <=right && (y <= bottom && y >= top);
+  }
 }
 
