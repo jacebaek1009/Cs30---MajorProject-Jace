@@ -12,6 +12,8 @@ let grab = true;
 let backg;
 let egg;
 let eggBasket;
+let foodBasket = [];
+
 
 function preload() {
   salmon = loadImage("salmon.png");
@@ -25,20 +27,27 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   background(backg);
   let salmonPlace = new Ingredients(mouseX, mouseY, salmon);
-  let placeEggBasket = new Basket(windowWidth/2, windowHeight/2, eggBasket);
+  let placeEggBasket = new Basket(windowWidth/2, windowHeight/2, eggBasket, 50, 50);
   ingredient.push(salmonPlace);
-  ingredient.push(placeEggBasket);
+  foodBasket.push(placeEggBasket);
 }
 
 function draw() {
   for(let i of ingredient) {
     i.display();
   }
-  
+  for(let i of foodBasket) {
+    i.display();
+  }
 }
 function mousePressed() {
-  let place = new Ingredients(mouseX, mouseY, salmon);
-  ingredient.push(place);
+  for(let i in foodBasket) {
+    let inBasket = i.isInBasket(mouseX, mouseY);
+    if(inBasket){
+      let place = new Ingredients(mouseX, mouseY, salmon);
+      ingredient.push(place);
+    }
+  }
 }
 
 
@@ -58,17 +67,19 @@ class Ingredients {
 
 
 class Basket {
-  constructor(x, y, type){
+  constructor(x, y, type, width, height){
     this.x = x;
     this.y = y;
     this.type = type;
+    this.width = width;
+    this.height = height;
   }
 
   display(){
-    image(this.type, this.x, this.y);
+    image(this.type, this.x, this.y, this.width, this.height);
   }
-  isInBasket(x, y, top, bottom, left, right) {
-    return x >= left && x <=right && (y <= bottom && y >= top);
+  isInBasket(x, y) {
+    return x >= this.x && x <=this.width && (y <= this.height && y >= this.y);
   }
 }
 
