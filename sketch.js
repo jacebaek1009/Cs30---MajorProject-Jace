@@ -39,6 +39,7 @@ function draw() {
   for(let i of foodBasket) {
     i.display();
   }
+  startImageTransition();
 }
 function mousePressed() {
   for(let i in foodBasket) {
@@ -83,3 +84,6 @@ class Basket {
   }
 }
 
+function startImageTransition(){
+  let images = document.get
+}
