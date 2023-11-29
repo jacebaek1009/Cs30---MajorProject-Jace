@@ -41,12 +41,7 @@ function draw() {
   }
 }
 function mousePressed() {
-  for(let i in foodBasket) {
-    let inBasket = i.isInBasket(mouseX, mouseY);
-    if(inBasket){
-      let place = new Ingredients(mouseX, mouseY, salmon);
-      ingredient.push(place);
-    }
+  let isClicked = ()
   }
 }
 
