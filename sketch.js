@@ -5,6 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
+let state = clickoningridients;
 let ingredient = [];
 let salmon;
 let basket;
@@ -45,9 +46,6 @@ function draw() {
   }
   startImageTransition();
 }
-function mousePressed() {
-  let isClicked = i.isInBasket(mouseX, mouseY, topSide, topSide + basketH, leftSide, leftSide + basketW);
-}
 
 
 
@@ -81,6 +79,17 @@ class Basket {
   isInBasket(x, y) {
     return x >= this.x && x <=this.width && (y <= this.height && y >= this.y);
   }
+}
+
+function grabIngridient(){
+  ingredient(mouseX, mouseY, 40);
+}
+
+function mousePressed(){
+  if (State === clickoningridients){
+    grabIngridient();
+  }
+
 }
 
 function startImageTransition(){
