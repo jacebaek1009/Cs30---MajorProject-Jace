@@ -13,6 +13,10 @@ let backg;
 let egg;
 let eggBasket;
 let foodBasket = [];
+let leftSide = 200;
+let topSide = 150;
+let basketW = 75;
+let basketH = 50;
 
 
 function preload() {
@@ -42,9 +46,9 @@ function draw() {
   startImageTransition();
 }
 function mousePressed() {
-  let isClicked = ()
-  }
+  let isClicked = i.isInBasket(mouseX, mouseY, topSide, topSide + basketH, leftSide, leftSide + basketW);
 }
+
 
 
 class Ingredients {
@@ -80,5 +84,5 @@ class Basket {
 }
 
 function startImageTransition(){
-  let images = document.get
+  let images = document.get;
 }
