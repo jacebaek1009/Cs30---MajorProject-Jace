@@ -14,28 +14,31 @@ let backg;
 let egg;
 let eggBasket;
 let foodBasket = [];
-let leftSide = 200;
-let topSide = 150;
-let basketW = 75;
-let basketH = 50;
+let room0_0;
+let room1_0;
+let currentRoom = 0;
+
 
 
 function preload() {
-  salmon = loadImage("salmon.png");
-  basket = loadImage("basket.png");
-  backg = loadImage("background.png");
+  room0_0 = loadImage("background.png");
+  room1_0 = loadImage("buildstation.jpg");
+
   egg = loadImage("egg.png");
+  salmon = loadImage("salmon.png");
+  
   eggBasket = loadImage("eggbasket.png");
+  basket = loadImage("basket.png");
+
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background(backg);
-  let salmonPlace = new Ingredients(mouseX, mouseY, salmon);
-  let placeEggBasket = new Basket(windowWidth/2, windowHeight/2, eggBasket, 50, 50);
-  ingredient.push(salmonPlace);
-  foodBasket.push(placeEggBasket);
+  // let salmonPlace = new Ingredients(mouseX, mouseY, salmon);
+  // ingredient.push(salmonPlace);
+
 }
+
 
 function draw() {
   for(let i of ingredient) {
@@ -44,7 +47,26 @@ function draw() {
   for(let i of foodBasket) {
     i.display();
   }
-  startImageTransition();
+  if(currentRoom === 0) {
+    room0();
+  }
+  else if(currentRoom === 1) {
+    room1();
+  }
+  isInRoom1();
+}
+
+function keyPressed() {
+  if(keyCode === RIGHT_ARROW) {
+    currentRoom += 1;
+  }
+  if(keyCode === LEFT_ARROW) {
+    currentRoom -= 1;
+  }
+}
+
+function mousePressed() {
+  let isClicked = i.isInBasket(mouseX, mouseY, topSide, topSide + basketH, leftSide, leftSide + basketW);
 }
 
 
@@ -93,5 +115,22 @@ function mousePressed(){
 }
 
 function startImageTransition(){
-  let images = document.get;
+  let images = document.get
+}
+
+function room0() {
+  currentRoom = 0;
+  background(room0_0);
+}
+
+function room1() {
+  currentRoom = 1;
+  background(255);
+}
+
+function isInRoom1() {
+  if(currentRoom === 1){
+    let placeEggBasket = new Basket(windowWidth/2, windowHeight/2, eggBasket, 50, 50);
+    foodBasket.push(placeEggBasket);
+  }
 }
