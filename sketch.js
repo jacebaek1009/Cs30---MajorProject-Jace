@@ -35,6 +35,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   // let salmonPlace = new Ingredients(mouseX, mouseY, salmon);
   // ingredient.push(salmonPlace);
+  let basketPlace = new Basket
 
 }
 
@@ -50,17 +51,40 @@ function draw() {
     room0();
   }
   else if(currentRoom === 1) {
+    
     room1();
+  }
+  else if(currentRoom === 2) {
+    room2();
+  }
+  else if(currentRoom === 3) {
+    room3();
   }
   isInRoom1();
 }
 
 function keyPressed() {
   if(keyCode === RIGHT_ARROW) {
-    currentRoom += 1;
+    if(currentRoom === 0) {
+      currentRoom = 1;
+    }
+    else if(currentRoom === 1){
+      currentRoom = 2;
+    }
+    else if(currentRoom === 2) {
+      currentRoom = 3;
+    }
   }
   if(keyCode === LEFT_ARROW) {
-    currentRoom -= 1;
+    if(currentRoom === 1) {
+      currentRoom = 0;
+    }
+    else if(currentRoom === 2) {
+      currentRoom = 1;
+    }
+    else if(currentRoom === 3) {
+      currentRoom = 2;
+    }
   }
 }
 
@@ -102,10 +126,6 @@ class Basket {
   }
 }
 
-function startImageTransition(){
-  let images = document.get
-}
-
 function room0() {
   currentRoom = 0;
   background(room0_0);
@@ -114,6 +134,16 @@ function room0() {
 function room1() {
   currentRoom = 1;
   background(255);
+}
+
+function room2() {
+  currentRoom = 2;
+  background(0);
+}
+
+function room3() {
+  currentRoom = 3;
+  background(150);
 }
 
 function isInRoom1() {
