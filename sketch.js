@@ -5,6 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
+let state = clickoningridients;
 let ingredient = [];
 let salmon;
 let basket;
@@ -124,6 +125,21 @@ class Basket {
   isInBasket(x, y) {
     return x >= this.x && x <=this.width && (y <= this.height && y >= this.y);
   }
+}
+
+function grabIngridient(){
+  ingredient(mouseX, mouseY, 40);
+}
+
+function mousePressed(){
+  if (State === clickoningridients){
+    grabIngridient();
+  }
+
+}
+
+function startImageTransition(){
+  let images = document.get
 }
 
 function room0() {
