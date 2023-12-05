@@ -1,5 +1,5 @@
-// Project Title
-// Your Name
+// EJ's Sushiria
+// Ieva Malezhyk and Jace Baek
 // Date
 //
 // Extra for Experts:
@@ -103,16 +103,22 @@ class Basket {
   }
 }
 
-function grabIngridient(){
-  ingredient(mouseX, mouseY, 40);
-}
-
 function mousePressed(){
-  if (State === clickoningridients){
+  if (state === "clickoningridients"){
     grabIngridient();
+  }
+  else{
+
   }
 
 }
+
+function grabIngridient(){
+  let ingridient = new Ingridients(mouseX, mouseY, egg);
+  ingridient.push();
+}
+
+
 
 function startImageTransition(){
   let images = document.get
