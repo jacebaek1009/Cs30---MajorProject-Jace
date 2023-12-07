@@ -36,8 +36,8 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   // let salmonPlace = new Ingredients(mouseX, mouseY, salmon);
   // ingredient.push(salmonPlace);
-  let basketPlace = new Basket
-
+  let basketPlace = new Basket(windowWidth/2, windowHeight/2, eggBasket, 100, 100);
+  foodBasket.push(basketPlace);
 }
 
 
@@ -52,7 +52,9 @@ function draw() {
     room0();
   }
   else if(currentRoom === 1) {
-    
+    for(let i of foodBasket) {
+      i.display();
+    }
     room1();
   }
   else if(currentRoom === 2) {
@@ -172,5 +174,18 @@ function isInRoom1() {
   if(currentRoom === 1){
     let placeEggBasket = new Basket(windowWidth/2, windowHeight/2, eggBasket, 50, 50);
     foodBasket.push(placeEggBasket);
+  }
+}
+
+class HowTo {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+
+  display() {
+    rect(this.x, this.y, this.width, this.height)
   }
 }
