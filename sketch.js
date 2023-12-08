@@ -17,9 +17,7 @@ let foodBasket = [];
 let room0_0;
 let room1_0;
 let currentRoom = 0;
-const newButton = document.createElement('button');
-neButton.textContent = 'Click me!';
-document.body.appendChild(newButton);
+const newButton = document.createElement("button");
 
 
 
@@ -51,6 +49,8 @@ function draw() {
 
   if(currentRoom === 0) {
     room0();
+    newButton.textContent = "Order Station";
+    document.body.appendChild(newButton);
   }
   else if(currentRoom === 1) {
     room1();
