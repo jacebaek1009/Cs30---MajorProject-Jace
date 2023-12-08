@@ -17,6 +17,9 @@ let foodBasket = [];
 let room0_0;
 let room1_0;
 let currentRoom = 0;
+const newButton = document.createElement('button');
+neButton.textContent = 'Click me!';
+document.body.appendChild(newButton);
 
 
 
@@ -61,7 +64,6 @@ function draw() {
   else if(currentRoom === 3) {
     room3();
   }
-  isInRoom1();
 }
 
 function keyPressed() {
@@ -160,5 +162,18 @@ function isInRoom1() {
   if(currentRoom === 1){
     let placeEggBasket = new Basket(windowWidth/2, windowHeight/2, eggBasket, 50, 50);
     foodBasket.push(placeEggBasket);
+  }
+}
+
+class HowTo {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+
+  display() {
+    rect(this.x, this.y, this.width, this.height)
   }
 }
