@@ -45,15 +45,15 @@ function draw() {
   for(let i of ingredient) {
     i.display();
   }
-  for(let i of foodBasket) {
-    i.display();
-  }
+
   if(currentRoom === 0) {
     room0();
   }
   else if(currentRoom === 1) {
-    
     room1();
+    for(let i of foodBasket) {
+      i.display();
+    }
   }
   else if(currentRoom === 2) {
     room2();
@@ -89,18 +89,7 @@ function keyPressed() {
   }
 }
 
-function mousePressed() {
-  if (currentRoom === 1 && state === "clickoningredients") {
-    for (let i = 0; i < foodBasket.length; i++) {
-      if (foodBasket[i].isInBasket(mouseX, mouseY)) {
-        let ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, egg);
-        ingredient.push(ing);
-        foodBasket.splice(i, 1);
-        break; 
-      }
-    }
-  }
-}
+
 
 class Ingredients {
   constructor(x, y, type){
@@ -145,11 +134,6 @@ function mousePressed() {
       }
     }
   }
-}
-
-
-function startImageTransition(){
-  let images = document.get
 }
 
 function room0() {
