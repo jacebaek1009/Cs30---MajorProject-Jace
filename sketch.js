@@ -5,7 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let state = clickoningridients;
+let state = "clickoningridients";
 let ingredient = [];
 let salmon;
 let basket;
@@ -34,12 +34,12 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  // let salmonPlace = new Ingredients(mouseX, mouseY, salmon);
-  // ingredient.push(salmonPlace);
-  let basketPlace = new Basket
+  let salmonPlace = new Ingredients(mouseX, mouseY, salmon);
+  ingredient.push(salmonPlace);
 
+  let basketPlace = new Basket(windowWidth / 2 - basket.width / 2, windowHeight / 2 - basket.height / 2, basket, basket.width, basket.height);
+  foodBasket.push(basketPlace);
 }
-
 
 function draw() {
   for(let i of ingredient) {
@@ -90,10 +90,17 @@ function keyPressed() {
 }
 
 function mousePressed() {
-  let isClicked = i.isInBasket(mouseX, mouseY, topSide, topSide + basketH, leftSide, leftSide + basketW);
+  if (currentRoom === 1 && state === "clickoningredients") {
+    for (let i = 0; i < foodBasket.length; i++) {
+      if (foodBasket[i].isInBasket(mouseX, mouseY)) {
+        let ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, egg);
+        ingredient.push(ing);
+        foodBasket.splice(i, 1);
+        break; 
+      }
+    }
+  }
 }
-
-
 
 class Ingredients {
   constructor(x, y, type){
@@ -109,7 +116,6 @@ class Ingredients {
   }
 }
 
-
 class Basket {
   constructor(x, y, type, width, height){
     this.x = x;
@@ -122,26 +128,24 @@ class Basket {
   display(){
     image(this.type, this.x, this.y, this.width, this.height);
   }
+  
   isInBasket(x, y) {
-    return x >= this.x && x <=this.width && (y <= this.height && y >= this.y);
+    return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
   }
 }
 
-function mousePressed(){
-  if (state === "clickoningridients"){
-    grabIngridient();
+function mousePressed() {
+  if (currentRoom === 1 && state === "clickoningredients") {
+    for (let i = 0; i < foodBasket.length; i++) {
+      if (foodBasket[i].isInBasket(mouseX, mouseY)) {
+        let ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, egg);
+        ingredient.push(ing);
+        foodBasket.splice(i, 1);
+        break; 
+      }
+    }
   }
-  else{
-
-  }
-
 }
-
-function grabIngridient(){
-  let ingridient = new Ingridients(mouseX, mouseY, egg);
-  ingridient.push();
-}
-
 
 
 function startImageTransition(){
