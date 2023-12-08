@@ -5,7 +5,6 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let state = clickoningridients;
 let ingredient = [];
 let salmon;
 let basket;
@@ -17,6 +16,9 @@ let foodBasket = [];
 let room0_0;
 let room1_0;
 let currentRoom = 0;
+const newButton = document.createElement('button');
+neButton.textContent = 'Click me!';
+document.body.appendChild(newButton);
 
 
 
@@ -52,10 +54,10 @@ function draw() {
     room0();
   }
   else if(currentRoom === 1) {
+    room1();
     for(let i of foodBasket) {
       i.display();
     }
-    room1();
   }
   else if(currentRoom === 2) {
     room2();
@@ -63,7 +65,6 @@ function draw() {
   else if(currentRoom === 3) {
     room3();
   }
-  isInRoom1();
 }
 
 function keyPressed() {
@@ -90,12 +91,6 @@ function keyPressed() {
     }
   }
 }
-
-function mousePressed() {
-  let isClicked = i.isInBasket(mouseX, mouseY, topSide, topSide + basketH, leftSide, leftSide + basketW);
-}
-
-
 
 class Ingredients {
   constructor(x, y, type){
@@ -128,23 +123,6 @@ class Basket {
     return x >= this.x && x <=this.width && (y <= this.height && y >= this.y);
   }
 }
-
-function mousePressed(){
-  if (state === "clickoningridients"){
-    grabIngridient();
-  }
-  else{
-
-  }
-
-}
-
-function grabIngridient(){
-  let ingridient = new Ingridients(mouseX, mouseY, egg);
-  ingridient.push();
-}
-
-
 
 function startImageTransition(){
   let images = document.get
