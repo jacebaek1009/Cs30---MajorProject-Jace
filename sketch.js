@@ -17,9 +17,6 @@ let foodBasket = [];
 let room0_0;
 let room1_0;
 let currentRoom = 0;
-const newButton = document.createElement("button");
-
-
 
 function preload() {
   room0_0 = loadImage("background.png");
@@ -43,26 +40,35 @@ function setup() {
 }
 
 function draw() {
+  displayButton(windowWidth/2, windowHeight/2, "blue", "Order");
+
   for(let i of ingredient) {
     i.display();
   }
 
   if(currentRoom === 0) {
     room0();
-    newButton.textContent = "Order Station";
-    document.body.appendChild(newButton);
+    bottomRect();
+    displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+    displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Build Station");
+    displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Cook Station");
+    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "tea Station");
+
   }
   else if(currentRoom === 1) {
     room1();
     for(let i of foodBasket) {
       i.display();
     }
+    bottomRect();
   }
   else if(currentRoom === 2) {
     room2();
+    bottomRect();
   }
   else if(currentRoom === 3) {
     room3();
+    bottomRect();
   }
 }
 
@@ -176,4 +182,19 @@ class HowTo {
   display() {
     rect(this.x, this.y, this.width, this.height)
   }
+}
+
+function displayButton(x, y, color, say) {
+  fill(color);
+  ellipse(x, y, 150, 100);
+
+  fill("black");
+  textSize(20);
+  textAlign(CENTER, CENTER);
+  text(say, x, y);
+}
+
+function bottomRect() {
+  fill("grey");
+  rect(0, windowHeight - 100, windowWidth, 100);
 }
