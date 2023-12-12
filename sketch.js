@@ -5,7 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let state = "clickoningridients";
+let state = "clickoningredients";
 let ingredient = [];
 let salmon;
 let basket;
@@ -24,7 +24,7 @@ document.body.appendChild(newButton);
 
 
 function preload() {
-  room0_0 = loadImage("background.png");
+  room0_0 = loadImage("order-station.png");
   room1_0 = loadImage("buildstation.jpg");
 
   egg = loadImage("egg.png");
@@ -37,10 +37,7 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  let salmonPlace = new Ingredients(mouseX, mouseY, salmon);
-  ingredient.push(salmonPlace);
-
-  let basketPlace = new Basket(windowWidth / 2 - basket.width / 2, windowHeight / 2 - basket.height / 2, basket, basket.width, basket.height);
+  let basketPlace = new Basket(width /2,height/2);
   foodBasket.push(basketPlace);
 }
 
@@ -158,12 +155,6 @@ function room3() {
   background(150);
 }
 
-function isInRoom1() {
-  if(currentRoom === 1){
-    let placeEggBasket = new Basket(windowWidth/2, windowHeight/2, eggBasket, 50, 50);
-    foodBasket.push(placeEggBasket);
-  }
-}
 
 class HowTo {
   constructor(x, y, width, height) {
