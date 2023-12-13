@@ -49,8 +49,8 @@ function draw() {
     room0();
     bottomRect();
     displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
-    displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Build Station");
-    displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Cook Station");
+    displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+    displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "tea Station");
 
   }
@@ -141,6 +141,14 @@ function mousePressed() {
       }
     }
   }
+  let isClicked1 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4, windowWidth/4 + buttonWidth);
+  if(isClicked1) {
+    room1();
+  }
+  let isClicked2 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 300, windowWidth + buttonWidth);
+  if(isClicked1) {
+    room1();
+  }
 }
 
 function room0() {
@@ -188,8 +196,7 @@ function displayButton(x, y, color, say) {
 }
 
 function isInButton(x, y, top, bottom, left, right) {
-  
-
+  return x >= left && x <= right && (y <= bottom && y >= top);
 }
 
 function bottomRect() {
