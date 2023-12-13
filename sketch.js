@@ -17,6 +17,8 @@ let foodBasket = [];
 let room0_0;
 let room1_0;
 let currentRoom = 0;
+let buttonWidth = 150;
+let buttonHeight = 100;
 
 function preload() {
   room0_0 = loadImage("background.png");
@@ -186,12 +188,17 @@ class HowTo {
 
 function displayButton(x, y, color, say) {
   fill(color);
-  ellipse(x, y, 150, 100);
+  ellipse(x, y, buttonWidth, buttonHeight);
 
   fill("black");
   textSize(20);
   textAlign(CENTER, CENTER);
   text(say, x, y);
+}
+
+function isInButton(x, y, top, bottom, left, right) {
+  
+
 }
 
 function bottomRect() {
