@@ -16,13 +16,16 @@ let eggBasket;
 let foodBasket = [];
 let room0_0;
 let room1_0;
+let room2_0;
+let room3_0;
 let currentRoom = 0;
 let buttonWidth = 150;
 let buttonHeight = 100;
 
 function preload() {
   room0_0 = loadImage("order-station.png");
-  room1_0 = loadImage("buildstation.jpg");
+  room1_0 = loadImage("cooking station.png");
+  room2_0 = loadImage("build.png");
 
   egg = loadImage("egg.png");
   salmon = loadImage("salmon.png");
@@ -51,23 +54,32 @@ function draw() {
     displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
-    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "tea Station");
+    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
 
   }
   else if(currentRoom === 1) {
     room1();
-    for(let i of foodBasket) {
-      i.display();
-    }
     bottomRect();
+    displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+    displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+    displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "tea Station");
   }
   else if(currentRoom === 2) {
     room2();
     bottomRect();
+    displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+    displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+    displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "tea Station");
   }
   else if(currentRoom === 3) {
     room3();
     bottomRect();
+    displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+    displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+    displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "tea Station");
   }
 }
 
@@ -141,14 +153,19 @@ function mousePressed() {
       }
     }
   }
-  let isClicked1 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4, windowWidth/4 + buttonWidth);
+  let isClicked1 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 - 40, windowWidth/4 + buttonWidth);
   if(isClicked1) {
+    room0();
+  }
+  let isClicked2 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 260, windowWidth/4  + 300 + buttonWidth);
+  if(isClicked2) {
     room1();
   }
-  let isClicked2 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 300, windowWidth + buttonWidth);
-  if(isClicked1) {
-    room1();
+  let isClicked3 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 540, windowWidth/4 + 600+ buttonWidth);
+  if(isClicked3) {
+    room2();
   }
+
 }
 
 function room0() {
@@ -158,12 +175,12 @@ function room0() {
 
 function room1() {
   currentRoom = 1;
-  background(255);
+  background(room1_0);
 }
 
 function room2() {
   currentRoom = 2;
-  background(0);
+  background(room2_0);
 }
 
 function room3() {
@@ -181,7 +198,26 @@ class HowTo {
   }
 
   display() {
-    rect(this.x, this.y, this.width, this.height)
+    rect(this.x, this.y, this.width, this.height);
+  }
+}
+
+class Customer {
+  constructor(x, y, dx, dy, width, height, character) {
+    this.x = x;
+    this.y = y;
+    this.dx = 5;
+    this.dy = 5;
+    this.width = width;
+    this.height = height;
+    this.char = character;
+  }
+  charDisplay() {
+    image(this.char, this.x, this.y, this.width, this.height);
+  }
+  charMove() {
+    this.x += this.dx;
+    
   }
 }
 
