@@ -34,17 +34,15 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  let basketPlace = new Basket(width /2,height/2);
+  let basketPlace = new Basket(width /2, height/2, eggBasket, width /2, height/2 );
   foodBasket.push(basketPlace);
 }
 
 function draw() {
-  displayButton(windowWidth/2, windowHeight/2, "blue", "Order");
 
-  for(let i of ingredient) {
-    i.display();
-  }
+  
 
+  
   if(currentRoom === 0) {
     room0();
     bottomRect();
@@ -52,13 +50,16 @@ function draw() {
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Build Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Cook Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "tea Station");
+    for(let y of foodBasket){
+      y.display();
+    }
+    for(let i of ingredient) {
+      i.display();
+  }
 
   }
   else if(currentRoom === 1) {
     room1();
-    for(let i of foodBasket) {
-      i.display();
-    }
     bottomRect();
   }
   else if(currentRoom === 2) {
@@ -131,7 +132,7 @@ class Basket {
 }
 
 function mousePressed() {
-  if (currentRoom === 1 && state === "clickoningredients") {
+  if (currentRoom === 0 && state === "clickoningredients") {
     for (let i = 0; i < foodBasket.length; i++) {
       if (foodBasket[i].isInBasket(mouseX, mouseY)) {
         let ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, egg);
