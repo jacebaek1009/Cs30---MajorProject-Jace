@@ -21,6 +21,8 @@ let room3_0;
 let currentRoom = 0;
 let buttonWidth = 150;
 let buttonHeight = 100;
+let demoCustomer;
+let customerArray = [];
 
 function preload() {
   room0_0 = loadImage("order-station.png");
@@ -33,17 +35,20 @@ function preload() {
   eggBasket = loadImage("eggbasket.png");
   basket = loadImage("basket.png");
 
+  demoCustomer = loadImage("demo customer.png");
+
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   let basketPlace = new Basket(width /2,height/2);
   foodBasket.push(basketPlace);
+
+  let customerPlace = new Customer(windowWidth, windowHeight/2, 10, 10, 100, 100, demoCustomer);
+  customerArray.push(customerPlace);
 }
 
 function draw() {
-  displayButton(windowWidth/2, windowHeight/2, "blue", "Order");
-
   for(let i of ingredient) {
     i.display();
   }
@@ -55,7 +60,10 @@ function draw() {
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-
+    for(let i of customerArray) {
+      i.charDisplay();
+      i.update();
+    }
   }
   else if(currentRoom === 1) {
     room1();
@@ -206,17 +214,17 @@ class Customer {
   constructor(x, y, dx, dy, width, height, character) {
     this.x = x;
     this.y = y;
-    this.dx = 5;
-    this.dy = 5;
+    this.dx = dx;
+    this.dy = dy;
     this.width = width;
     this.height = height;
     this.char = character;
   }
   charDisplay() {
-    image(this.char, this.x, this.y, this.width, this.height);
+    //image(this.char, this.x, this.y, this.width, this.height);
   }
-  charMove() {
-    this.x += this.dx;
+  update() {
+    this.x -= this.dx;
     
   }
 }
