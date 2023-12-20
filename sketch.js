@@ -44,7 +44,7 @@ function setup() {
   let basketPlace = new Basket(width /2,height/2);
   foodBasket.push(basketPlace);
 
-  let customerPlace = new Customer(windowWidth, windowHeight/2, 10, 10, 100, 100, demoCustomer);
+  let customerPlace = new Customer(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
   customerArray.push(customerPlace);
 }
 
@@ -221,7 +221,7 @@ class Customer {
     this.char = character;
   }
   charDisplay() {
-    //image(this.char, this.x, this.y, this.width, this.height);
+    image(this.char, this.x, this.y, this.width, this.height);
   }
   update() {
     this.x -= this.dx;
@@ -239,8 +239,8 @@ function displayButton(x, y, color, say) {
   text(say, x, y);
 }
 
-function isInButton(x, y, top, bottom, left, right) {
-  return x >= left && x <= right && (y <= bottom && y >= top);
+function isInButton(x, y, top, bottom, left, right, padding = 20) {
+  return x >= left - padding && x <= right + padding && (y <= bottom + padding && y >= top - padding);
 }
 
 function bottomRect() {
