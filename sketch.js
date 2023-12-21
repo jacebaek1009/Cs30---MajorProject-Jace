@@ -63,6 +63,7 @@ function draw() {
     for(let i of customerArray) {
       i.charDisplay();
       i.update();
+      i.stopLoc();
     }
   }
   else if(currentRoom === 1) {
@@ -71,7 +72,7 @@ function draw() {
     displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
-    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "tea Station");
+    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
   }
   else if(currentRoom === 2) {
     room2();
@@ -79,7 +80,7 @@ function draw() {
     displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
-    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "tea Station");
+    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
   }
   else if(currentRoom === 3) {
     room3();
@@ -87,7 +88,7 @@ function draw() {
     displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
-    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "tea Station");
+    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
   }
 }
 
@@ -225,7 +226,12 @@ class Customer {
   }
   update() {
     this.x -= this.dx;
-    
+  }
+  stopLoc() {
+    if(this.x <= 30) {
+      this.dx = 0;
+      this.x -= this.dx;
+    }
   }
 }
 
