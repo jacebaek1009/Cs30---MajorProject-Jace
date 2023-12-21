@@ -44,8 +44,10 @@ function setup() {
   let basketPlace = new Basket(width /2,height/2);
   foodBasket.push(basketPlace);
 
-  let customerPlace = new Customer(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
-  customerArray.push(customerPlace);
+  let customerPlace = new CustomerEva(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
+  customerArray.push(evaPlace);
+
+  let customerObj = new Customerobject(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
 }
 
 function draw() {
@@ -64,6 +66,14 @@ function draw() {
       i.charDisplay();
       i.update();
       i.stopLoc();
+
+      if (i > 0) {
+        let distance = abs(customerArray[i].x - customerArray[i-1].x );
+        if(distance <= 30) {
+          customerArray[i].dx = 0;
+          customerArray[i].x = customerArray[i].originalX - 30;
+        }
+      }
     }
   }
   else if(currentRoom === 1) {
@@ -211,15 +221,23 @@ class HowTo {
   }
 }
 
-class Customer {
-  constructor(x, y, dx, dy, width, height, character) {
+class Customerobject {
+  constructor (x, y, dx, dy, width, height, characters) {
     this.x = x;
     this.y = y;
     this.dx = dx;
     this.dy = dy;
     this.width = width;
     this.height = height;
-    this.char = character;
+    this.char = characters;
+
+    this.isColliding = false;
+  }
+}
+class CustomerEva extends Customerobject {
+  constructor(x, y, dx, dy, width, height, character) {
+    super (x, y, dx, dy, width, height, character);
+    this.originalX = x;
   }
   charDisplay() {
     image(this.char, this.x, this.y, this.width, this.height);
@@ -234,6 +252,7 @@ class Customer {
     }
   }
 }
+
 
 function displayButton(x, y, color, say) {
   fill(color);
