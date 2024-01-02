@@ -7,12 +7,15 @@
 
 let state = "clickoningredients";
 let ingredient = [];
+let basketSelected = false;
+let selectedBasket = null;
 let salmon;
 let basket;
 let grab = true;
 let backg;
 let egg;
 let eggBasket;
+let salmonBasket;
 let foodBasket = [];
 let room0_0;
 let room1_0;
@@ -26,6 +29,7 @@ function preload() {
 
   egg = loadImage("egg.png");
   salmon = loadImage("salmon.png");
+  salmonBasket = loadImage("salmonBasket.png")
   
   eggBasket = loadImage("eggbasket.png");
   basket = loadImage("basket.png");
@@ -36,11 +40,12 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   let basketPlace = new Basket(width /2, height/2, eggBasket, width /2, height/2 );
   foodBasket.push(basketPlace);
+
+  salmonBasket = new Basket(width / 2 + 100, height / 2, salmonBasket, 100, 100);
+  foodBasket.push(salmonBasket);
 }
 
 function draw() {
-
-  
 
   
   if(currentRoom === 0) {
@@ -56,7 +61,6 @@ function draw() {
     for(let i of ingredient) {
       i.display();
   }
-
   }
   else if(currentRoom === 1) {
     room1();
@@ -69,6 +73,11 @@ function draw() {
   else if(currentRoom === 3) {
     room3();
     bottomRect();
+  }
+  if (basketSelected && selectedBasket !== null) {
+    selectedBasket.x = mouseX;
+    selectedBasket.y = mouseY;
+    selectedBasket.display();
   }
 }
 
@@ -96,8 +105,6 @@ function keyPressed() {
     }
   }
 }
-
-
 
 class Ingredients {
   constructor(x, y, type){
@@ -135,13 +142,30 @@ function mousePressed() {
   if (currentRoom === 0 && state === "clickoningredients") {
     for (let i = 0; i < foodBasket.length; i++) {
       if (foodBasket[i].isInBasket(mouseX, mouseY)) {
-        let ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, egg);
+        let ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, egg, salmon);
         ingredient.push(ing);
         foodBasket.splice(i, 1);
         break; 
       }
     }
   }
+  
+  for (let i = 0; i < foodBasket.length; i++) {
+    if (foodBasket[i].isInBasket(mouseX, mouseY)) {
+      basketSelected = true;
+      selectedBasket = foodBasket[i];
+      if (i === 1) { 
+        selectedBasket.type = salmon; 
+      }
+      break;
+    }
+  }
+}
+
+
+function mouseReleased() {
+  basketSelected = false;
+  selectedBasket = null;
 }
 
 function room0() {
@@ -197,3 +221,4 @@ function bottomRect() {
   fill("grey");
   rect(0, windowHeight - 100, windowWidth, 100);
 }
+
