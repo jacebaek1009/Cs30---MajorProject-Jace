@@ -44,10 +44,11 @@ function setup() {
   let basketPlace = new Basket(width /2,height/2);
   foodBasket.push(basketPlace);
 
-  let customerPlace = new CustomerEva(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
+  let evaPlace = new CustomerEva(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
   customerArray.push(evaPlace);
 
-  let customerObj = new Customerobject(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
+  let customerJerry = new Customerobject(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
+  customerArray.push(customerJerry);
 }
 
 function draw() {
