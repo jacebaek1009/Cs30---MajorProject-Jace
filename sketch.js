@@ -24,27 +24,32 @@ let buttonHeight = 100;
 let demoCustomer;
 let customerArray = [];
 let spawnTimer = 0;
+let many = 3;
+let howToArray = [];
+
 
 function preload() {
   room0_0 = loadImage("order-station.png");
   room1_0 = loadImage("cooking station.png");
   room2_0 = loadImage("build.png");
-
+  
   egg = loadImage("egg.png");
   salmon = loadImage("salmon.png");
   
   eggBasket = loadImage("eggbasket.png");
   basket = loadImage("basket.png");
-
+  
   demoCustomer = loadImage("demo customer.png");
-
+  
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   let basketPlace = new Basket(width /2,height/2);
   foodBasket.push(basketPlace);
-
+  
+  let predict = new HowTo(windowWidth - 500, windowHeight/2, 50, 50, 5);
+  howToArray.push(predict);
 }
 
 function draw() {
@@ -89,10 +94,9 @@ function draw() {
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-
-    let predict = new HowTo(windowWidth - 100, windowHeight/2, 50, 50, 5);
-    predict.display();
-    predict.move();
+    for(let i = 0; i < howToArray; i++) {
+      i.display();
+    }
   }
   else if(currentRoom === 3) {
     room3();
@@ -186,7 +190,10 @@ function mousePressed() {
   if(isClicked3) {
     room2();
   }
-
+  let isClicked4 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 750, windowWidth/4 + 900 + buttonWidth);
+  if(isClicked4) {
+    room3();
+  }
 }
 
 function room0() {
@@ -215,16 +222,14 @@ class HowTo {
     this.y = y;
     this.width = width;
     this.height = height;
-    this.num = many;
+    this.many = many;
   }
   display() {
-    for(let i = 0; i <= this.num; i++) {
-      rect(this.x, this.y, this.width, this.height);
-    }
+    rect(this.x, this.y, this.width, this.height);
   }
   move() {
-    for(let i = 0; i <= this.num; i++) {
-      this.x += 10;
+    for(let i = 0; i <= many; i++) {
+      this.x += 20;
     }
   }
 }
