@@ -89,6 +89,10 @@ function draw() {
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+
+    let predict = new HowTo(windowWidth - 100, windowHeight/2, 50, 50, 5);
+    predict.display();
+    predict.move();
   }
   else if(currentRoom === 3) {
     room3();
@@ -205,17 +209,23 @@ function room3() {
   background(150);
 }
 
-
 class HowTo {
-  constructor(x, y, width, height) {
+  constructor(x, y, width, height, many) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.num = many;
   }
-
   display() {
-    rect(this.x, this.y, this.width, this.height);
+    for(let i = 0; i <= this.num; i++) {
+      rect(this.x, this.y, this.width, this.height);
+    }
+  }
+  move() {
+    for(let i = 0; i <= this.num; i++) {
+      this.x += 10;
+    }
   }
 }
 
@@ -254,10 +264,10 @@ class CustomerEva extends Customerobject {
   }
 
   assignOrder() {
-  let orders = ['salmon', 'egg'];
+    let orders = ['salmon', 'egg'];
   
-  this.order = orders;
-  console.log(`Customer at (${this.x}, ${this.y}) has ordered: ${this.order}`);
+    this.order = orders;
+    console.log(`Customer at (${this.x}, ${this.y}) has ordered: ${this.order}`);
   }
 }
 
