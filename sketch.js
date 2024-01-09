@@ -81,6 +81,7 @@ function draw() {
     for(const customerEva of customerArray) {
       customerEva.move();
       customerEva.draw();
+      customerEva.assignOrder();
     }
 
     for (let i = 0; i < customerArray.length - 1; i++) {
@@ -212,6 +213,11 @@ function mouseClicked() {
   if(isClicked3) {
     room2();
   }
+  
+  let isClicked4 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 750, windowWidth/4 + 900 + buttonWidth);
+  if(isClicked4) {
+    room3();
+  }
 }
 
 function adjustCustomer(startPos) {
@@ -219,9 +225,6 @@ function adjustCustomer(startPos) {
   for (let i = startPos; i < customerArray.length; i++){
     customerArray[i].x = x;
     x += customerArray[i].x + 10;
-  let isClicked4 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 750, windowWidth/4 + 900 + buttonWidth);
-  if(isClicked4) {
-    room3();
   }
 }
 
@@ -244,6 +247,7 @@ function room3() {
   currentRoom = 3;
   background(150);
 }
+
 
 class HowTo {
   constructor(x, y, width, height, many) {
@@ -271,8 +275,6 @@ class Customerobject {
     this.dy = dy;
     this.size = size;
     this.char = characters;
-
-    this.isColliding = false;
   }
 }
 class CustomerEva extends Customerobject {
@@ -284,19 +286,21 @@ class CustomerEva extends Customerobject {
   draw() {
     image(this.char, this.x, this.y, this.size, this.size);
   }
-
+  
   move() {
     // Only move if not at the left edge
     if (this.x > 0) {
       this.x -= this.dx;
     }
   }
-
-  assignOrder() {
-    let orders = ['salmon', 'egg'];
   
-    this.order = orders;
-    console.log(`Customer at (${this.x}, ${this.y}) has ordered: ${this.order}`);
+  assignOrder() {
+    if(this.x === 1) {
+      let orders = ["salmon", "egg"];
+    
+      this.order = orders;
+      console.log(`Customer at (${this.x}, ${this.y}) has ordered: ${this.order}`);
+    }
   }
   
   customerClicked(mx, my) {
@@ -321,24 +325,4 @@ function isInButton(x, y, top, bottom, left, right, padding = 20) {
 function bottomRect() {
   fill("grey");
   rect(0, windowHeight - 100, windowWidth, 100);
-}
-
-class Square {
-  constructor(x, y, size, speed) {
-    this.x = x;
-    this.y = y;
-    this.size = size;
-    this.speed = speed;
-  }
-
-  draw() {
-    fill('blue');
-    rect(this.x, this.y, this.size, this.size);
-  }
-
-  move() {
-    if (this.x > 0) {
-      this.x -= this.speed;
-    }
-  }
 }
