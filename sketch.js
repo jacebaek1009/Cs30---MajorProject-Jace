@@ -386,7 +386,5 @@ function bottomRect() {
   rect(0, windowHeight - 100, windowWidth, 100);
 }
 
-function spawnCustomer() {
-  let newCustomer =  new CustomerEva(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
-  customerArray.push(newCustomer);
-}
+
+
