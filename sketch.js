@@ -29,6 +29,8 @@ let customerArray = [];
 let spawnTimer = 0;
 let many = 3;
 let howToArray = [];
+let sushiRoll;
+let sushi;
 
 
 function preload() {
@@ -53,11 +55,14 @@ function preload() {
 
 >>>>>>> Stashed changes
   demoCustomer = loadImage("demo customer.png");
+
+  sushiRoll = loadImage("sushi.png");
   
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+<<<<<<< HEAD
 
   let eggBasketPlace = new Basket(width / 2 - 100, height / 2, eggBasket, 100, 100); 
   foodBasket.push(eggBasketPlace);
@@ -67,6 +72,9 @@ function setup() {
 
   let tofuBasketPlace = new Basket(width / 2 + 300, height / 2, tofuBasket, 100, 100);
   foodBasket.push(tofuBasketPlace);
+=======
+  sushi = spawnSushi();
+>>>>>>> 53773c67d0aaf0994f22082f4d4c08d035fbc513
   let basketPlace = new Basket(windowWidth /2 ,windowHeight/2);
   foodBasket.push(basketPlace);
 
@@ -132,6 +140,8 @@ function draw() {
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+
+    displaySushi();
   }
   else if(currentRoom === 2) {
     room2();
@@ -401,3 +411,15 @@ function bottomRect() {
 
 
 
+function spawnSushi() {
+  let sushi = {
+    x: windowWidth - 900,
+    y: windowHeight - 400,
+    image: sushiRoll
+  };
+  return sushi;
+}
+
+function displaySushi() {
+  image(sushi.image, sushi.x, sushi.y);
+}
