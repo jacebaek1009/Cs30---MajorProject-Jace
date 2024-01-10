@@ -44,9 +44,14 @@ function preload() {
 
   salmonBasket = loadImage("salmonBasket.png");
   eggBasket = loadImage("eggbasket.png");
+<<<<<<< Updated upstream
   tofuBasket = loadImage("tofuBasket.png")
   basket = loadImage("basket.png");
   
+=======
+
+
+>>>>>>> Stashed changes
   demoCustomer = loadImage("demo customer.png");
   
 }
@@ -65,8 +70,16 @@ function setup() {
   let basketPlace = new Basket(windowWidth /2 ,windowHeight/2);
   foodBasket.push(basketPlace);
 
+<<<<<<< Updated upstream
   const size = 100;
   const spacing = size + 20;
+=======
+  salmonBasket = new Basket(width / 2 + 100, height / 2, salmon, 100, 100); 
+  foodBasket.push(salmonBasket);
+
+  let customerPlace = new CustomerEva(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
+  customerArray.push(evaPlace);
+>>>>>>> Stashed changes
 
   let x = size;
 
