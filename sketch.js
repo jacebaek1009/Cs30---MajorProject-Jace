@@ -46,14 +46,9 @@ function preload() {
 
   salmonBasket = loadImage("salmonBasket.png");
   eggBasket = loadImage("eggbasket.png");
-<<<<<<< Updated upstream
   tofuBasket = loadImage("tofuBasket.png")
   basket = loadImage("basket.png");
   
-=======
-
-
->>>>>>> Stashed changes
   demoCustomer = loadImage("demo customer.png");
 
   sushiRoll = loadImage("sushi.png");
@@ -62,7 +57,6 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-<<<<<<< HEAD
 
   let eggBasketPlace = new Basket(width / 2 - 100, height / 2, eggBasket, 100, 100); 
   foodBasket.push(eggBasketPlace);
@@ -72,22 +66,17 @@ function setup() {
 
   let tofuBasketPlace = new Basket(width / 2 + 300, height / 2, tofuBasket, 100, 100);
   foodBasket.push(tofuBasketPlace);
-=======
   sushi = spawnSushi();
->>>>>>> 53773c67d0aaf0994f22082f4d4c08d035fbc513
   let basketPlace = new Basket(windowWidth /2 ,windowHeight/2);
   foodBasket.push(basketPlace);
 
-<<<<<<< Updated upstream
   const size = 100;
   const spacing = size + 20;
-=======
   salmonBasket = new Basket(width / 2 + 100, height / 2, salmon, 100, 100); 
   foodBasket.push(salmonBasket);
 
   let customerPlace = new CustomerEva(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
   customerArray.push(evaPlace);
->>>>>>> Stashed changes
 
   let x = size;
 
