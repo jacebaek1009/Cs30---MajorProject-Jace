@@ -32,25 +32,33 @@ function preload() {
   room0_0 = loadImage("order-station.png");
   room1_0 = loadImage("cooking station.png");
   room2_0 = loadImage("build.png");
+  room3_0 = loadImage("teaStation.png");
+
 
   egg = loadImage("egg.png");
   salmon = loadImage("salmon.png");
-  salmonBasket = loadImage("salmonBasket.png")
-  
+  tofu = loadImage("tofu.png");
+
+  salmonBasket = loadImage("salmonBasket.png");
   eggBasket = loadImage("eggbasket.png");
+  tofuBasket = loadImage("tofuBasket.png")
   basket = loadImage("basket.png");
 
   demoCustomer = loadImage("demo customer.png");
-
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  let basketPlace = new Basket(width /2, height/2, eggBasket, width /2, height/2 );
-  foodBasket.push(basketPlace);
 
-  salmonBasket = new Basket(width / 2 + 100, height / 2, salmon, 100, 100); 
-  foodBasket.push(salmonBasket);
+  let eggBasketPlace = new Basket(width / 2 - 100, height / 2, eggBasket, 100, 100); 
+  foodBasket.push(eggBasketPlace);
+  
+  let salmonBasketPlace = new Basket(width / 2 + 100, height / 2, salmonBasket, 100, 100);
+  foodBasket.push(salmonBasketPlace);
+
+  let tofuBasketPlace = new Basket(width / 2 + 300, height / 2, tofuBasket, 100, 100);
+  foodBasket.push(tofuBasketPlace);
+
 }
 
 function draw() {
@@ -169,23 +177,20 @@ class Basket {
 }
 
 function mousePressed() {
-  if (currentRoom === 0 && state === "clickoningredients") {
+  if (currentRoom === 2 && state === "clickoningredients") {
     for (let i = 0; i < foodBasket.length; i++) {
       if (foodBasket[i].isInBasket(mouseX, mouseY)) {
-        let ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, egg, salmon);
+        let ing;
+        if (i === 0) {
+          ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, egg);
+        } else if (i === 1) {
+          ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, salmon);
+        } else if (i === 2) {
+          ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, tofu);
+        }
         ingredient.push(ing);
         foodBasket.splice(i, 1);
         break; 
-      }
-      for (let i = 0; i < foodBasket.length; i++) {
-        if (foodBasket[i].isInBasket(mouseX, mouseY)) {
-          if (i === 1) { 
-            foodBasket[i].type = salmon; 
-          }
-          basketSelected = true;
-          selectedBasket = foodBasket[i];
-          break;
-        }
       }
     }
   }
@@ -194,9 +199,6 @@ function mousePressed() {
     if (foodBasket[i].isInBasket(mouseX, mouseY)) {
       basketSelected = true;
       selectedBasket = foodBasket[i];
-      if (i === 1) { 
-        selectedBasket.type = salmon; 
-      }
       break;
     }
   }
@@ -210,11 +212,15 @@ function mouseReleased() {
   if(isClicked1) {
     room0();
   }
-  let isClicked2 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 260, windowWidth/4  + 300 + buttonWidth);
+  let isClicked2 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 260, windowWidth/4  + 200 + buttonWidth);
   if(isClicked2) {
     room1();
   }
-  let isClicked3 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 540, windowWidth/4 + 600+ buttonWidth);
+  let isClicked3 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 540, windowWidth/4 + 600 + buttonWidth);
+  if(isClicked3) {
+    room2();
+  }
+  let isClicked4 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 600, windowWidth/4 + 800 + buttonWidth);
   if(isClicked3) {
     room2();
   }
@@ -234,6 +240,20 @@ function room1() {
 function room2() {
   currentRoom = 2;
   background(room2_0);
+
+  let eggBasketBuild = new Basket(150, 335, eggBasket, 100, 100); 
+  let salmonBasketBuild = new Basket(380, 335, salmonBasket, 100, 100); 
+  let tofuBasketBuild = new Basket(550, 335, tofuBasket, 100, 100);  
+
+  eggBasketBuild.display();
+  salmonBasketBuild.display();
+  tofuBasketBuild.display();
+
+
+  displayButton(windowWidth / 4, windowHeight - 50, "lime", "Order Station");
+  displayButton(windowWidth / 4 + 300, windowHeight - 50, "", "Cook Station");
+  displayButton(windowWidth / 4 + 600, windowHeight - 50, "orange", "Build Station");
+  displayButton(windowWidth / 4 + 900, windowHeight - 50, "purple", "Tea Station");
 }
 
 function room3() {
