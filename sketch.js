@@ -28,6 +28,7 @@ let many = 3;
 let howToArray = [];
 let sushiRoll;
 let sushi;
+let riceBowlWhite;
 
 
 function preload() {
@@ -44,6 +45,7 @@ function preload() {
   demoCustomer = loadImage("demo customer.png");
 
   sushiRoll = loadImage("sushi.png");
+  riceBowlWhite = loadImage("ricebowl1.png");
   
 }
 
@@ -365,4 +367,17 @@ function spawnSushi() {
 
 function displaySushi() {
   image(sushi.image, sushi.x, sushi.y);
+}
+
+function spawnRiceBowlWhite() {
+  let riceWhite = {
+    x: windowWidth - 1100,
+    y: windowHeight - 700,
+    image: riceBowlWhite
+  };
+  return riceWhite;
+}
+
+function displayRiceWhite() {
+  image(riceWhite.image, )
 }
