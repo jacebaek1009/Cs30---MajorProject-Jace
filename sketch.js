@@ -75,8 +75,8 @@ function setup() {
   salmonBasket = new Basket(width / 2 + 100, height / 2, salmon, 100, 100); 
   foodBasket.push(salmonBasket);
 
-  let customerPlace = new CustomerEva(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
-  customerArray.push(evaPlace);
+  // let customerPlace = new CustomerEva(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
+  // customerArray.push(evaPlace);
 
   let x = size;
 
