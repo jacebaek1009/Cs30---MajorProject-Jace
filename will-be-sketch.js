@@ -27,12 +27,6 @@ let buttonHeight = 100;
 let demoCustomer;
 let customerArray = [];
 let spawnTimer = 0;
-let many = 3;
-let howToArray = [];
-let sushiRoll;
-let sushi;
-let riceBowlWhite;
-
 
 function preload() {
   room0_0 = loadImage("order-station.png");
@@ -49,12 +43,8 @@ function preload() {
   eggBasket = loadImage("eggbasket.png");
   tofuBasket = loadImage("tofuBasket.png")
   basket = loadImage("basket.png");
-  
-  demoCustomer = loadImage("demo customer.png");
 
-  sushiRoll = loadImage("sushi.png");
-  riceBowlWhite = loadImage("ricebowl1.png");
-  
+  demoCustomer = loadImage("demo customer.png");
 }
 
 function setup() {
@@ -68,33 +58,17 @@ function setup() {
 
   let tofuBasketPlace = new Basket(width / 2 + 300, height / 2, tofuBasket, 100, 100);
   foodBasket.push(tofuBasketPlace);
-  sushi = spawnSushi();
-  let basketPlace = new Basket(windowWidth /2 ,windowHeight/2);
-  foodBasket.push(basketPlace);
 
-  const size = 100;
-  const spacing = size + 20;
-  salmonBasket = new Basket(width / 2 + 100, height / 2, salmon, 100, 100); 
-  foodBasket.push(salmonBasket);
-
-  // let customerPlace = new CustomerEva(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
-  // customerArray.push(evaPlace);
-
-  let x = size;
-
-  const customerNum = 5;
-
-  for(let i = 0; i < customerNum; i++) {
-    const customerEva = new CustomerEva(windowWidth, windowHeight/2, 15, 10, size, demoCustomer);
-    customerArray.push(customerEva);
-    x -= spacing;
-  }
-  
-  let predict = new HowTo(windowWidth - 500, windowHeight/2, 50, 50, 5);
-  howToArray.push(predict);
 }
 
 function draw() {
+  spawnTimer++;
+
+  if(spawnTimer > 300) {
+    spawnCustomer();
+    spawnTimer = 0;
+  }
+  
   for(let i of ingredient) {
     i.display();
   }
@@ -106,21 +80,11 @@ function draw() {
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-  
-    for(const customerEva of customerArray) {
-      customerEva.move();
-      customerEva.draw();
-      customerEva.assignOrder();
-    }
-
-    for (let i = 0; i < customerArray.length - 1; i++) {
-      const currentCustomer = customerArray[i];
-      const nextCustomer = customerArray[i + 1];
-      const distance = nextCustomer.x - (currentCustomer.x + currentCustomer.size);
-
-      if (distance < 0) {
-        nextCustomer.x = currentCustomer.x + currentCustomer.size + 1;
-      }
+    
+    for(let i = 0; i < customerArray.length; i++) {
+      customerArray[i].charDisplay();
+      customerArray[i].update();
+      customerArray[i].stopLoc();
     }
 
   }
@@ -131,8 +95,6 @@ function draw() {
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-
-    displaySushi();
   }
   else if(currentRoom === 2) {
     room2();
@@ -141,9 +103,6 @@ function draw() {
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-    for(let i = 0; i < howToArray; i++) {
-      i.display();
-    }
   }
   else if(currentRoom === 3) {
     room3();
@@ -268,23 +227,6 @@ function mouseReleased() {
   if(isClicked3) {
     room2();
   }
-  let isClicked4 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 600, windowWidth/4 + 800 + buttonWidth);
-  if(isClicked3) {
-    room2();
-  }
-  
-  let isClicked5 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 750, windowWidth/4 + 900 + buttonWidth);
-  if(isClicked4) {
-    room3();
-  }
-}
-
-function adjustCustomer(startPos) {
-  let x = customerArray[startPos].x;
-  for (let i = startPos; i < customerArray.length; i++){
-    customerArray[i].x = x;
-    x += customerArray[i].x + 10;
-  }
 }
 
 function room0() {
@@ -323,61 +265,57 @@ function room3() {
 
 
 class HowTo {
-  constructor(x, y, width, height, many) {
+  constructor(x, y, width, height) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
-    this.many = many;
   }
+
   display() {
     rect(this.x, this.y, this.width, this.height);
-  }
-  move() {
-    for(let i = 0; i <= many; i++) {
-      this.x += 20;
-    }
   }
 }
 
 class Customerobject {
-  constructor (x, y, dx, dy, size, characters) {
+  constructor (x, y, dx, dy, width, height, characters) {
     this.x = x;
     this.y = y;
     this.dx = dx;
     this.dy = dy;
-    this.size = size;
+    this.width = width;
+    this.height = height;
     this.char = characters;
+
+    this.isColliding = false;
   }
 }
 class CustomerEva extends Customerobject {
-  constructor(x, y, dx, dy, size, character) {
-    super (x, y, dx, dy, size, character);
+  constructor(x, y, dx, dy, width, height, character) {
+    super (x, y, dx, dy, width, height, character);
     this.originalX = x;
     this.order = null;
   }
-  draw() {
-    image(this.char, this.x, this.y, this.size, this.size);
+  charDisplay() {
+    image(this.char, this.x, this.y, this.width, this.height);
   }
-  
-  move() {
-    // Only move if not at the left edge
-    if (this.x > 0) {
-      this.x -= this.dx;
+  update() {
+    this.x -= this.dx;
+  }
+  stopLoc() {
+    if (this.x <= 0) {
+      this.dx = 0; // Stop moving
+      let lastCustomer = customerArray[customerArray.length - 1];
+      this.x = lastCustomer.x + lastCustomer.width + 50; // Place behind the last customer
+      this.assignOrder();
     }
   }
-  
+
   assignOrder() {
-    if(this.x === 1) {
-      let orders = ["salmon", "egg"];
-    
-      this.order = orders;
-      console.log(`Customer at (${this.x}, ${this.y}) has ordered: ${this.order}`);
-    }
-  }
+  let orders = ['salmon', 'egg'];
   
-  customerClicked(mx, my) {
-    return mx >= this.x && mx <= this.x + this.size && my >= this.y && my <= this.y + this.size;
+  this.order = orders;
+  console.log(`Customer at (${this.x}, ${this.y}) has ordered: ${this.order}`);
   }
 }
 
@@ -400,30 +338,7 @@ function bottomRect() {
   rect(0, windowHeight - 100, windowWidth, 100);
 }
 
-
-
-function spawnSushi() {
-  let sushi = {
-    x: windowWidth - 900,
-    y: windowHeight - 400,
-    image: sushiRoll
-  };
-  return sushi;
-}
-
-function displaySushi() {
-  image(sushi.image, sushi.x, sushi.y);
-}
-
-function spawnRiceBowlWhite() {
-  let riceWhite = {
-    x: windowWidth - 1100,
-    y: windowHeight - 700,
-    image: riceBowlWhite
-  };
-  return riceWhite;
-}
-
-function displayRiceWhite() {
-  image(riceWhite.image, )
+function spawnCustomer() {
+  let newCustomer =  new CustomerEva(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
+  customerArray.push(newCustomer);
 }
