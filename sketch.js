@@ -32,6 +32,10 @@ let howToArray = [];
 let sushiRoll;
 let sushi;
 let riceBowlWhite;
+let tofu;
+let riceWhite;
+let tofuBasket;
+let didOrder = false;
 
 
 function preload() {
@@ -68,7 +72,10 @@ function setup() {
 
   let tofuBasketPlace = new Basket(width / 2 + 300, height / 2, tofuBasket, 100, 100);
   foodBasket.push(tofuBasketPlace);
+  
   sushi = spawnSushi();
+  riceWhite = spawnRiceBowlWhite();
+
   let basketPlace = new Basket(windowWidth /2 ,windowHeight/2);
   foodBasket.push(basketPlace);
 
@@ -113,6 +120,10 @@ function draw() {
       customerEva.assignOrder();
     }
 
+    if (didOrder === true) {
+      orderButton();
+    }
+
     for (let i = 0; i < customerArray.length - 1; i++) {
       const currentCustomer = customerArray[i];
       const nextCustomer = customerArray[i + 1];
@@ -133,6 +144,7 @@ function draw() {
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
 
     displaySushi();
+    displayRiceWhite();
   }
   else if(currentRoom === 2) {
     room2();
@@ -243,19 +255,6 @@ function mouseClicked() {
     }
   }
   
-  for (let i = 0; i < foodBasket.length; i++) {
-    if (foodBasket[i].isInBasket(mouseX, mouseY)) {
-      basketSelected = true;
-      selectedBasket = foodBasket[i];
-      break;
-    }
-  }
-}
-
-
-function mouseReleased() {
-  basketSelected = false;
-  selectedBasket = null;
   let isClicked1 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 - 40, windowWidth/4 + buttonWidth);
   if(isClicked1) {
     room0();
@@ -269,14 +268,28 @@ function mouseReleased() {
     room2();
   }
   let isClicked4 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 600, windowWidth/4 + 800 + buttonWidth);
-  if(isClicked3) {
+  if(isClicked4) {
     room2();
   }
   
   let isClicked5 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 750, windowWidth/4 + 900 + buttonWidth);
-  if(isClicked4) {
+  if(isClicked5) {
     room3();
   }
+  
+  for (let i = 0; i < foodBasket.length; i++) {
+    if (foodBasket[i].isInBasket(mouseX, mouseY)) {
+      basketSelected = true;
+      selectedBasket = foodBasket[i];
+      break;
+    }
+  }
+}
+
+
+function mouseReleased() {
+  basketSelected = false;
+  selectedBasket = null;
 }
 
 function adjustCustomer(startPos) {
@@ -365,13 +378,18 @@ class CustomerEva extends Customerobject {
     if (this.x > 0) {
       this.x -= this.dx;
     }
+    else {
+      this.dx = 0;
+    }
   }
   
   assignOrder() {
-    if(this.x === 1) {
+    if(this.dx === 0) {
+
       let orders = ["salmon", "egg"];
     
       this.order = orders;
+      didOrder = true;
       console.log(`Customer at (${this.x}, ${this.y}) has ordered: ${this.order}`);
     }
   }
@@ -417,13 +435,19 @@ function displaySushi() {
 
 function spawnRiceBowlWhite() {
   let riceWhite = {
-    x: windowWidth - 1100,
-    y: windowHeight - 700,
+    x: windowWidth - 1050,
+    y: windowHeight - 600,
+    width: 475,
+    height: 100,
     image: riceBowlWhite
   };
   return riceWhite;
 }
 
 function displayRiceWhite() {
-  image(riceWhite.image, )
+  image(riceWhite.image, riceWhite.x, riceWhite.y, riceWhite.width, riceWhite.height);
+}
+
+function orderButton() {
+  circle(50, windowHeight/2, 20);
 }
