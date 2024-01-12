@@ -38,6 +38,8 @@ let strawberryVisible = false;
 let matcha;
 let matchaVisible = false;
 let buttonVisible = false;
+let riceBowlWhite;
+
 
 function preload() {
   room0_0 = loadImage("order-station.png");
@@ -58,6 +60,7 @@ function preload() {
   demoCustomer = loadImage("demo customer.png");
 
   sushiRoll = loadImage("sushi.png");
+  riceBowlWhite = loadImage("ricebowl1.png");
   
 }
 
@@ -441,4 +444,17 @@ function spawnSushi() {
 
 function displaySushi() {
   image(sushi.image, sushi.x, sushi.y);
+}
+
+function spawnRiceBowlWhite() {
+  let riceWhite = {
+    x: windowWidth - 1100,
+    y: windowHeight - 700,
+    image: riceBowlWhite
+  };
+  return riceWhite;
+}
+
+function displayRiceWhite() {
+  image(riceWhite.image, )
 }
