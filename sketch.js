@@ -14,7 +14,9 @@ let basket;
 let grab = true;
 let backg;
 let egg;
+let tofu;
 let eggBasket;
+let tofuBasket;
 let salmonBasket;
 let foodBasket = [];
 let room0_0;
@@ -31,7 +33,11 @@ let many = 3;
 let howToArray = [];
 let sushiRoll;
 let sushi;
-
+let strawberryTea;
+let strawberryVisible = false;
+let matcha;
+let matchaVisible = false;
+let buttonVisible = false;
 
 function preload() {
   room0_0 = loadImage("order-station.png");
@@ -66,9 +72,18 @@ function setup() {
 
   let tofuBasketPlace = new Basket(width / 2 + 300, height / 2, tofuBasket, 100, 100);
   foodBasket.push(tofuBasketPlace);
+
+  strawberryTea = createButton("Strawberry Tea");
+  strawberryTea.size(200, 50);
+  strawberryTea.style("background-color", "pink");
+  strawberryTea.mousePressed(toggleStrawberry);
+
+  matcha = createButton("Matcha");
+  matcha.size(200, 50);
+  matcha.style("background-color", "green");
+  matcha.mousePressed(toggleMatcha);
+
   sushi = spawnSushi();
-  let basketPlace = new Basket(windowWidth /2 ,windowHeight/2);
-  foodBasket.push(basketPlace);
 
   const size = 100;
   const spacing = size + 20;
@@ -120,8 +135,8 @@ function draw() {
         nextCustomer.x = currentCustomer.x + currentCustomer.size + 1;
       }
     }
-
   }
+
   else if(currentRoom === 1) {
     room1();
     bottomRect();
@@ -139,8 +154,13 @@ function draw() {
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-    for(let i = 0; i < howToArray; i++) {
+    for (let i = 0; i < howToArray.length; i++) {
       i.display();
+    }
+    if (basketSelected && selectedBasket !== null) {
+      selectedBasket.x = mouseX;
+      selectedBasket.y = mouseY;
+      selectedBasket.display();
     }
   }
   else if(currentRoom === 3) {
@@ -150,12 +170,26 @@ function draw() {
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+    strawberryTea.position(100, 100);
+    matcha.position(350, 100)
+
+    if (strawberryVisible) {
+      fill("pink");
+      rect(700, 370, 150, 200);
   }
-  if (basketSelected && selectedBasket !== null) {
-    selectedBasket.x = mouseX;
-    selectedBasket.y = mouseY;
-    selectedBasket.display();
+  if (matchaVisible) {
+    fill("green");
+    rect(700, 370, 150, 200);
   }
+  
+}
+}
+
+function toggleStrawberry() {
+  strawberryVisible = !strawberryVisible;
+}
+function toggleMatcha() {
+  matchaVisible = !matchaVisible;
 }
 
 function keyPressed() {
@@ -266,12 +300,8 @@ function mouseReleased() {
   if(isClicked3) {
     room2();
   }
-  let isClicked4 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 600, windowWidth/4 + 800 + buttonWidth);
-  if(isClicked3) {
-    room2();
-  }
   
-  let isClicked5 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 750, windowWidth/4 + 900 + buttonWidth);
+  let isClicked4 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 750, windowWidth/4 + 900 + buttonWidth);
   if(isClicked4) {
     room3();
   }
@@ -316,7 +346,7 @@ function room2() {
 
 function room3() {
   currentRoom = 3;
-  background(150);
+  background(room3_0);
 }
 
 
