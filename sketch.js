@@ -36,6 +36,7 @@ let tofu;
 let riceWhite;
 let tofuBasket;
 let didOrder = false;
+let level1Order1 = ["white Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"];
 
 
 function preload() {
@@ -57,7 +58,7 @@ function preload() {
   demoCustomer = loadImage("demo customer.png");
 
   sushiRoll = loadImage("sushi.png");
-  riceBowlWhite = loadImage("ricebowl1.png");
+  riceBowlWhite = loadImage("whiteRice.png");
   
 }
 
@@ -276,7 +277,11 @@ function mouseClicked() {
   if(isClicked5) {
     room3();
   }
-  
+
+  let isClickedOrder = isInButton(mouseX, mouseY, windowHeight/2 - 30, windowHeight/2 - 30 + 65, 50, 50);
+  if(isClickedOrder){
+    roomOrder();
+  }  
   for (let i = 0; i < foodBasket.length; i++) {
     if (foodBasket[i].isInBasket(mouseX, mouseY)) {
       basketSelected = true;
@@ -285,6 +290,8 @@ function mouseClicked() {
     }
   }
 }
+
+
 
 
 function mouseReleased() {
@@ -332,6 +339,12 @@ function room2() {
 function room3() {
   currentRoom = 3;
   background(150);
+}
+
+function roomOrder() {
+  currentRoom = 4;
+  console.log(level1Order1);
+  background(0);
 }
 
 
@@ -435,10 +448,10 @@ function displaySushi() {
 
 function spawnRiceBowlWhite() {
   let riceWhite = {
-    x: windowWidth - 1050,
-    y: windowHeight - 600,
-    width: 475,
-    height: 100,
+    x: windowWidth - 950,
+    y: windowHeight - 650,
+    width: 300,
+    height: 200,
     image: riceBowlWhite
   };
   return riceWhite;
@@ -449,5 +462,6 @@ function displayRiceWhite() {
 }
 
 function orderButton() {
-  circle(50, windowHeight/2, 20);
+  fill("white");
+  ellipse(50, windowHeight/2 - 30, 65, 50);
 }
