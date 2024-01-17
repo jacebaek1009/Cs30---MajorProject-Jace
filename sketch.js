@@ -5,20 +5,13 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let state = "clickoningredients";
-let ingredient = [];
-let basketSelected = false;
-let selectedBasket = null;
 let salmon;
-let basket;
-let grab = true;
 let backg;
 let egg;
 let tofu;
 let eggBasket;
 let tofuBasket;
 let salmonBasket;
-let foodBasket = [];
 let room0_0;
 let room1_0;
 let room2_0;
@@ -39,6 +32,9 @@ let matcha;
 let matchaVisible = false;
 let buttonVisible = false;
 let riceBowlWhite;
+let baskets = [];
+let pickedSquare = null;
+let placedSquares = [];
 
 
 function preload() {
@@ -67,14 +63,7 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  let eggBasketPlace = new Basket(width / 2 - 100, height / 2, eggBasket, 100, 100); 
-  foodBasket.push(eggBasketPlace);
   
-  let salmonBasketPlace = new Basket(width / 2 + 100, height / 2, salmonBasket, 100, 100);
-  foodBasket.push(salmonBasketPlace);
-
-  let tofuBasketPlace = new Basket(width / 2 + 300, height / 2, tofuBasket, 100, 100);
-  foodBasket.push(tofuBasketPlace);
 
   strawberryTea = createButton("Strawberry Tea");
   strawberryTea.size(200, 50);
@@ -90,8 +79,8 @@ function setup() {
 
   const size = 100;
   const spacing = size + 20;
-  salmonBasket = new Basket(width / 2 + 100, height / 2, salmon, 100, 100); 
-  foodBasket.push(salmonBasket);
+
+
 
   // let customerPlace = new CustomerEva(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
   // customerArray.push(evaPlace);
@@ -111,10 +100,11 @@ function setup() {
 }
 
 function draw() {
-  for(let i of ingredient) {
-    i.display();
-  }
+  // for(let i of ingredient) {
+  //   i.display();
+  // }
   
+
   if(currentRoom === 0) {
     room0();
     bottomRect();
@@ -143,28 +133,44 @@ function draw() {
   else if(currentRoom === 1) {
     room1();
     bottomRect();
+    displaySushi();
     displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
 
-    displaySushi();
   }
   else if(currentRoom === 2) {
     room2();
+    // for (let i = 0; i < howToArray.length; i++) {
+    //   i.display();
+    // }
+    // if (basketSelected && selectedBasket !== null) {
+    //   selectedBasket.x = mouseX;
+    //   selectedBasket.y = mouseY;
+    //   selectedBasket.display();
+    // }
+    baskets.push(new Basket(width / 4, height / 2, 50, color(255, 0, 0)));
+    baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
+    baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
+    for (let basket of baskets) {
+      basket.display();
+    }
+  
+    for (let square of placedSquares) {
+      square.display();
+    }
+  
+    if (pickedSquare) {
+      pickedSquare.update(mouseX, mouseY);
+      pickedSquare.display();
+    }
+
     bottomRect();
     displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-    for (let i = 0; i < howToArray.length; i++) {
-      i.display();
-    }
-    if (basketSelected && selectedBasket !== null) {
-      selectedBasket.x = mouseX;
-      selectedBasket.y = mouseY;
-      selectedBasket.display();
-    }
   }
   else if(currentRoom === 3) {
     room3();
@@ -173,6 +179,15 @@ function draw() {
     displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
     displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
     displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+    strawberryTea = createButton("Strawberry Tea");
+    strawberryTea.size(200, 50);
+    strawberryTea.style("background-color", "pink");
+    strawberryTea.mousePressed(toggleStrawberry);
+  
+    matcha = createButton("Matcha");
+    matcha.size(200, 50);
+    matcha.style("background-color", "green");
+    matcha.mousePressed(toggleMatcha);
     strawberryTea.position(100, 100);
     matcha.position(350, 100)
 
@@ -220,68 +235,38 @@ function keyPressed() {
   }
 }
 
-class Ingredients {
-  constructor(x, y, type){
-    this.x = x;
-    this.y = y;
-    this.type = type;
+
+function mousePressed(){
+  let pickedFromBasket = false;
+
+  for (let basket of baskets) {
+    if (basket.contains(mouseX, mouseY)) {
+      if (!pickedSquare) {
+        pickedSquare = new Square(basket.x, basket.y, 30, basket.color);
+        pickedFromBasket = true;
+      } else {
+        pickedSquare.release();
+        pickedSquare = new Square(basket.x, basket.y, 30, basket.color);
+        pickedFromBasket = true;
+      }
+      break;
+    }
   }
 
-  display() {
-    noStroke();
-    fill(255, 0 , 0);
-    image(this.type, this.x, this.y);
+  if (!pickedFromBasket && pickedSquare) {
+    pickedSquare.release();
+    placedSquares.push(pickedSquare);
+    pickedSquare = null;
   }
 }
 
-class Basket {
-  constructor(x, y, type, width, height){
-    this.x = x;
-    this.y = y;
-    this.type = type;
-    this.width = width;
-    this.height = height;
-  }
 
-  display(){
-    image(this.type, this.x, this.y, this.width, this.height);
-  }
-  
-  isInBasket(x, y) {
-    return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
-  }
-}
 
 function mouseClicked() {
   for (let i = 0; i < customerArray.length; i++) {
     if (customerArray[i].customerClicked(mouseX, mouseY)) {
       customerArray.splice(i, 1);
       adjustCustomer(i);
-      break;
-    }
-  }
-  if (currentRoom === 1 && state === "clickoningredients") {
-    for (let i = 0; i < foodBasket.length; i++) {
-      if (foodBasket[i].isInBasket(mouseX, mouseY)) {
-        let ing;
-        if (i === 0) {
-          ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, egg);
-        } else if (i === 1) {
-          ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, salmon);
-        } else if (i === 2) {
-          ing = new Ingredients(foodBasket[i].x, foodBasket[i].y, tofu);
-        }
-        ingredient.push(ing);
-        foodBasket.splice(i, 1);
-        break; 
-      }
-    }
-  }
-  
-  for (let i = 0; i < foodBasket.length; i++) {
-    if (foodBasket[i].isInBasket(mouseX, mouseY)) {
-      basketSelected = true;
-      selectedBasket = foodBasket[i];
       break;
     }
   }
@@ -332,15 +317,6 @@ function room2() {
   currentRoom = 2;
   background(room2_0);
 
-  let eggBasketBuild = new Basket(150, 335, eggBasket, 100, 100); 
-  let salmonBasketBuild = new Basket(380, 335, salmonBasket, 100, 100); 
-  let tofuBasketBuild = new Basket(550, 335, tofuBasket, 100, 100);  
-
-  eggBasketBuild.display();
-  salmonBasketBuild.display();
-  tofuBasketBuild.display();
-
-
   displayButton(windowWidth / 4, windowHeight - 50, "lime", "Order Station");
   displayButton(windowWidth / 4 + 300, windowHeight - 50, "", "Cook Station");
   displayButton(windowWidth / 4 + 600, windowHeight - 50, "orange", "Build Station");
@@ -350,6 +326,54 @@ function room2() {
 function room3() {
   currentRoom = 3;
   background(room3_0);
+}
+
+class Square {
+  constructor(x, y, size, color) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.color = color;
+    this.isPicked = true;
+  }
+  update(x, y) {
+    if (this.isPicked) {
+      this.x = x;
+      this.y = y;
+    }
+  }
+  display() {
+    fill(this.color);
+    rect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+  }
+  release() {
+    this.isPicked = false;
+  }
+}
+
+class Basket {
+  constructor(x, y, size, color) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.color = color;
+  }
+
+
+  contains(x, y) {
+    return (
+      x > this.x - this.size / 2 &&
+      x < this.x + this.size / 2 &&
+      y > this.y - this.size / 2 &&
+      y < this.y + this.size / 2
+    );
+  }
+
+
+  display() {
+    fill(this.color);
+    rect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+  }
 }
 
 
