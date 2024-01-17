@@ -83,37 +83,12 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  
-
-  strawberryTea = createButton("Strawberry Tea");
-  strawberryTea.size(200, 50);
-  strawberryTea.style("background-color", "pink");
-  strawberryTea.mousePressed(toggleStrawberry);
-
-  matcha = createButton("Matcha");
-  matcha.size(200, 50);
-  matcha.style("background-color", "green");
-  matcha.mousePressed(toggleMatcha);
-
   sushi = spawnSushi();
 
-  const size = 100;
   const spacing = size + 20;
-
-
-
-  // let customerPlace = new CustomerEva(windowWidth, windowHeight/2, 5, 10, 100, 100, demoCustomer);
-  // customerArray.push(evaPlace);
 
   let x = size;
 
-  const customerNum = 5;
-
-  for(let i = 0; i < customerNum; i++) {
-    const customerEva = new CustomerEva(windowWidth, windowHeight/2, 15, 10, size, demoCustomer);
-    customerArray.push(customerEva);
-    x -= spacing;
-  }
   sushi = spawnSushi();
   riceWhite = spawnRiceBowlWhite();
 
@@ -126,31 +101,33 @@ function setup() {
       customerArray.push(customerEva);
       x -= spacing;
   }
+
+  strawberryTea = createButton("Strawberry Tea");
+  strawberryTea.size(200, 50);
+  strawberryTea.style("background-color", "pink");
+
+  matcha = createButton("Matcha");
+  matcha.size(200, 50);
+  matcha.style("background-color", "green");
+  strawberryTea.position(100, 100);
+  matcha.position(350, 100)
+
+  if (strawberryVisible) {
+    fill("pink");
+    rect(700, 370, 150, 200);
+  }
+  if (matchaVisible) {
+    fill("green");
+    rect(700, 370, 150, 200);
+  }
 }
 
-function draw() {
-  // for(let i of ingredient) {
-  //   i.display();
-  // }
-  
-
-  if(currentRoom === 0) {
-    room0();
-    bottomRect();
-    displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
-    displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
-    displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
-    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-  
-    for(const customerEva of customerArray) {
-      customerEva.move();
-      customerEva.draw();
-      customerEva.assignOrder();
-    }
 function draw() {  
   if (level1 && !gaveFood) {
     if(currentRoom === 0) {
       room0();
+      strawberryTea.hide();
+      matcha.hide();
       bottomRect();
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
@@ -176,101 +153,46 @@ function draw() {
           nextCustomer.x = currentCustomer.x + currentCustomer.size + 1;
         }
       }
-      
     }
     else if(currentRoom === 1) {
       room1();
+      strawberryTea.hide();
+      matcha.hide();
       bottomRect();
+      displaySushi();
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
       displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
       displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-      
       displaySushi();
       displayRiceWhite();
     }
     else if(currentRoom === 2) {
       room2();
+      strawberryTea.hide();
+      matcha.hide();
+      baskets.push(new Basket(width / 4, height / 2, 50, color(255, 0, 0)));
+      baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
+      baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
+      for (let basket of baskets) {
+        basket.display();
+      }
+    
+      for (let square of placedSquares) {
+        square.display();
+      }
+    
+      if (pickedSquare) {
+        pickedSquare.update(mouseX, mouseY);
+        pickedSquare.display();
+      }
+
       bottomRect();
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
       displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
       displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-      for(let i = 0; i < howToArray; i++) {
-        i.display();
-      }
     }
-  }
-
-  else if(currentRoom === 1) {
-    room1();
-    bottomRect();
-    displaySushi();
-    displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
-    displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
-    displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
-    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-
-  }
-  else if(currentRoom === 2) {
-    room2();
-    // for (let i = 0; i < howToArray.length; i++) {
-    //   i.display();
-    // }
-    // if (basketSelected && selectedBasket !== null) {
-    //   selectedBasket.x = mouseX;
-    //   selectedBasket.y = mouseY;
-    //   selectedBasket.display();
-    // }
-    baskets.push(new Basket(width / 4, height / 2, 50, color(255, 0, 0)));
-    baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
-    baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
-    for (let basket of baskets) {
-      basket.display();
-    }
-  
-    for (let square of placedSquares) {
-      square.display();
-    }
-  
-    if (pickedSquare) {
-      pickedSquare.update(mouseX, mouseY);
-      pickedSquare.display();
-    }
-
-    bottomRect();
-    displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
-    displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
-    displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
-    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-  }
-  else if(currentRoom === 3) {
-    room3();
-    bottomRect();
-    displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
-    displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
-    displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
-    displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-    strawberryTea = createButton("Strawberry Tea");
-    strawberryTea.size(200, 50);
-    strawberryTea.style("background-color", "pink");
-    strawberryTea.mousePressed(toggleStrawberry);
-  
-    matcha = createButton("Matcha");
-    matcha.size(200, 50);
-    matcha.style("background-color", "green");
-    matcha.mousePressed(toggleMatcha);
-    strawberryTea.position(100, 100);
-    matcha.position(350, 100)
-
-    if (strawberryVisible) {
-      fill("pink");
-      rect(700, 370, 150, 200);
-  }
-  if (matchaVisible) {
-    fill("green");
-    rect(700, 370, 150, 200);
-  }
     else if(currentRoom === 3) {
       room3();
       bottomRect();
@@ -278,16 +200,29 @@ function draw() {
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
       displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
       displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+      strawberryTea.show();
+      matcha.show();
+      strawberryTea.mousePressed(toggleStrawberry);
+      matcha.mousePressed(toggleMatcha);
+      if (strawberryVisible) {
+        fill("pink");
+        rect(700, 370, 150, 200);
+      }
+      if (matchaVisible) {
+        fill("green");
+        rect(700, 370, 150, 200);
+      }
     }
-    else if(currentRoom === 4)
-      if (millis() > orderTimer + orderTime) {
-        room0();
-        orderTimer = millis();
-    }
-    ordersDone++;
+    else if(currentRoom === 4){
+      strawberryTea.hide();
+      matcha.hide();
+        if (millis() > orderTimer + orderTime) {
+          room0();
+          orderTimer = millis();
+        }
+      }
+    ordersDone++; 
   }
-  
-}
 }
 
 function toggleStrawberry() {
@@ -357,12 +292,6 @@ function mouseClicked() {
       break;
     }
   }
-}
-
-
-function mouseReleased() {
-  basketSelected = false;
-  selectedBasket = null;
   let isClicked1 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 - 40, windowWidth/4 + buttonWidth);
   if(isClicked1) {
     room0();
@@ -380,12 +309,17 @@ function mouseReleased() {
   if(isClicked4) {
     room3();
   }
-
+  
   let isClickedOrder = isInButton(mouseX, mouseY, windowHeight - 350, windowHeight - 450 + 115, 500, 600);
   if(isClickedOrder){
     roomOrder();
-    didOrder = false;
   }  
+}
+
+
+function mouseReleased() {
+  basketSelected = false;
+  selectedBasket = null;
 }
 
 function adjustCustomer(startPos) {
@@ -409,16 +343,17 @@ function room1() {
 function room2() {
   currentRoom = 2;
   background(room2_0);
-
-  displayButton(windowWidth / 4, windowHeight - 50, "lime", "Order Station");
-  displayButton(windowWidth / 4 + 300, windowHeight - 50, "", "Cook Station");
-  displayButton(windowWidth / 4 + 600, windowHeight - 50, "orange", "Build Station");
-  displayButton(windowWidth / 4 + 900, windowHeight - 50, "purple", "Tea Station");
 }
 
 function room3() {
   currentRoom = 3;
   background(room3_0);
+}
+
+function roomOrder() {
+  background(room0_0);
+  currentRoom = 4;
+  console.log(level1Order1);
 }
 
 class Square {
@@ -469,11 +404,6 @@ class Basket {
   }
 }
 
-function roomOrder() {
-  background(room0_0);
-  currentRoom = 4;
-  console.log(level1Order1);
-}
 
 
 class HowTo {
@@ -593,6 +523,4 @@ function displayRiceWhite() {
 function orderButton() {
   fill("white");
   ellipse(550, windowHeight - 350, 155, 115);
-}
-  }
 }
