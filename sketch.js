@@ -171,7 +171,7 @@ function draw() {
       room2();
       strawberryTea.hide();
       matcha.hide();
-      baskets.push(new Basket(width / 4, height / 2, 50, color(255, 0, 0)));
+      baskets.push(new Basket(width / 4, height / 2, 50, eggBasket));
       baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
       baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
       for (let basket of baskets) {
@@ -380,11 +380,11 @@ class Square {
 }
 
 class Basket {
-  constructor(x, y, size, color) {
+  constructor(x, y, size, image) {
     this.x = x;
     this.y = y;
     this.size = size;
-    this.color = color;
+    this.image = image;
   }
 
 
@@ -399,8 +399,7 @@ class Basket {
 
 
   display() {
-    fill(this.color);
-    rect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+    image(this.image, this.x,this.y,this.size,this.size)
   }
 }
 
