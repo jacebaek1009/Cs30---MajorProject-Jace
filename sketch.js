@@ -61,7 +61,7 @@ function preload() {
   room1_0 = loadImage("cooking station.png");
   room2_0 = loadImage("build.png");
   room3_0 = loadImage("teaStation.png");
-  room4_0 = loadImage("Mainstation.png")
+  room4_0 = loadImage("OrderStation2.png")
 
 
   egg = loadImage("egg.png");
@@ -172,8 +172,8 @@ function draw() {
       strawberryTea.hide();
       matcha.hide();
       baskets.push(new Basket(width / 4, height / 2, 50, eggBasket));
-      baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
-      baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
+      // baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
+      // baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
       for (let basket of baskets) {
         basket.display();
       }
