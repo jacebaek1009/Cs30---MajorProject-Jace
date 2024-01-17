@@ -16,14 +16,20 @@ let room0_0;
 let room1_0;
 let room2_0;
 let room3_0;
+let room4_0;
 let currentRoom = 0;
 let buttonWidth = 150;
 let buttonHeight = 100;
 let demoCustomer;
 let customerArray = [];
-let spawnTimer = 0;
+
+let orderTimer = 0;
+let orderTime = 8000;
+
 let many = 3;
+
 let howToArray = [];
+
 let sushiRoll;
 let sushi;
 let strawberryTea;
@@ -35,13 +41,27 @@ let riceBowlWhite;
 let baskets = [];
 let pickedSquare = null;
 let placedSquares = [];
+let riceWhite;
 
+let order;
+let didOrder = false;
+let level1Order1 = ["white Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"];
+
+const size = 200;
+const spacing = size + 20;
+let x = size;
+const customerNum = 5;
+
+let level1 = true;
+let gaveFood = false;
+let ordersDone = 0;
 
 function preload() {
   room0_0 = loadImage("order-station.png");
   room1_0 = loadImage("cooking station.png");
   room2_0 = loadImage("build.png");
   room3_0 = loadImage("teaStation.png");
+  room4_0 = loadImage("Mainstation.png")
 
 
   egg = loadImage("egg.png");
@@ -56,7 +76,7 @@ function preload() {
   demoCustomer = loadImage("demo customer.png");
 
   sushiRoll = loadImage("sushi.png");
-  riceBowlWhite = loadImage("ricebowl1.png");
+  riceBowlWhite = loadImage("whiteRice.png");
   
 }
 
@@ -94,9 +114,18 @@ function setup() {
     customerArray.push(customerEva);
     x -= spacing;
   }
+  sushi = spawnSushi();
+  riceWhite = spawnRiceBowlWhite();
+
   
   let predict = new HowTo(windowWidth - 500, windowHeight/2, 50, 50, 5);
   howToArray.push(predict);
+  
+  for(let i = 0; i < customerNum; i++) {
+      const customerEva = new CustomerEva(windowWidth, windowHeight - 300, 15, 10, size, demoCustomer);
+      customerArray.push(customerEva);
+      x -= spacing;
+  }
 }
 
 function draw() {
@@ -118,14 +147,57 @@ function draw() {
       customerEva.draw();
       customerEva.assignOrder();
     }
-
-    for (let i = 0; i < customerArray.length - 1; i++) {
-      const currentCustomer = customerArray[i];
-      const nextCustomer = customerArray[i + 1];
-      const distance = nextCustomer.x - (currentCustomer.x + currentCustomer.size);
-
-      if (distance < 0) {
-        nextCustomer.x = currentCustomer.x + currentCustomer.size + 1;
+function draw() {  
+  if (level1 && !gaveFood) {
+    if(currentRoom === 0) {
+      room0();
+      bottomRect();
+      displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+      displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+      displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+      displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+      
+      for(const customerEva of customerArray) {
+        customerEva.move();
+        customerEva.draw();
+        customerEva.assignOrder();
+      }
+      
+      if (didOrder) {
+        orderButton();
+      }
+      
+      for (let i = 0; i < customerArray.length - 1; i++) {
+        const currentCustomer = customerArray[i];
+        const nextCustomer = customerArray[i + 1];
+        const distance = nextCustomer.x - (currentCustomer.x + currentCustomer.size);
+        
+        if (distance < 0) {
+          nextCustomer.x = currentCustomer.x + currentCustomer.size + 1;
+        }
+      }
+      
+    }
+    else if(currentRoom === 1) {
+      room1();
+      bottomRect();
+      displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+      displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+      displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+      displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+      
+      displaySushi();
+      displayRiceWhite();
+    }
+    else if(currentRoom === 2) {
+      room2();
+      bottomRect();
+      displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+      displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+      displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+      displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+      for(let i = 0; i < howToArray; i++) {
+        i.display();
       }
     }
   }
@@ -198,6 +270,21 @@ function draw() {
   if (matchaVisible) {
     fill("green");
     rect(700, 370, 150, 200);
+  }
+    else if(currentRoom === 3) {
+      room3();
+      bottomRect();
+      displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+      displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+      displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+      displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+    }
+    else if(currentRoom === 4)
+      if (millis() > orderTimer + orderTime) {
+        room0();
+        orderTimer = millis();
+    }
+    ordersDone++;
   }
   
 }
@@ -293,6 +380,12 @@ function mouseReleased() {
   if(isClicked4) {
     room3();
   }
+
+  let isClickedOrder = isInButton(mouseX, mouseY, windowHeight - 350, windowHeight - 450 + 115, 500, 600);
+  if(isClickedOrder){
+    roomOrder();
+    didOrder = false;
+  }  
 }
 
 function adjustCustomer(startPos) {
@@ -305,7 +398,7 @@ function adjustCustomer(startPos) {
 
 function room0() {
   currentRoom = 0;
-  background(room0_0);
+  background(room4_0);
 }
 
 function room1() {
@@ -376,6 +469,12 @@ class Basket {
   }
 }
 
+function roomOrder() {
+  background(room0_0);
+  currentRoom = 4;
+  console.log(level1Order1);
+}
+
 
 class HowTo {
   constructor(x, y, width, height, many) {
@@ -417,16 +516,21 @@ class CustomerEva extends Customerobject {
   
   move() {
     // Only move if not at the left edge
-    if (this.x > 0) {
+    if (this.x > 500) {
       this.x -= this.dx;
+    }
+    else {
+      this.dx = 0;
     }
   }
   
   assignOrder() {
-    if(this.x === 1) {
+    if(this.dx === 0) {
+
       let orders = ["salmon", "egg"];
     
       this.order = orders;
+      didOrder = true;
       console.log(`Customer at (${this.x}, ${this.y}) has ordered: ${this.order}`);
     }
   }
@@ -435,6 +539,7 @@ class CustomerEva extends Customerobject {
     return mx >= this.x && mx <= this.x + this.size && my >= this.y && my <= this.y + this.size;
   }
 }
+
 
 function displayButton(x, y, color, say) {
   fill(color);
@@ -472,13 +577,22 @@ function displaySushi() {
 
 function spawnRiceBowlWhite() {
   let riceWhite = {
-    x: windowWidth - 1100,
-    y: windowHeight - 700,
+    x: windowWidth - 950,
+    y: windowHeight - 650,
+    width: 300,
+    height: 200,
     image: riceBowlWhite
   };
   return riceWhite;
 }
 
 function displayRiceWhite() {
-  image(riceWhite.image, )
+  image(riceWhite.image, riceWhite.x, riceWhite.y, riceWhite.width, riceWhite.height);
+}
+
+function orderButton() {
+  fill("white");
+  ellipse(550, windowHeight - 350, 155, 115);
+}
+  }
 }
