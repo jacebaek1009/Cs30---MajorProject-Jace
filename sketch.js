@@ -380,11 +380,11 @@ class Square {
 }
 
 class Basket {
-  constructor(x, y, size, color) {
+  constructor(x, y, size, image) {
     this.x = x;
     this.y = y;
     this.size = size;
-    this.color = color;
+    this.image = image
   }
 
 
