@@ -97,6 +97,7 @@ function preload() {
   
   sushiRoll = loadImage("sushi.png");
   riceBowlWhite = loadImage("whiteRice.png");
+  whiteRice = loadImage("Wrice.png");
 
   strawberryPic = loadImage("strawberrytea.png");
   matchaPic = loadImage("matcha.png");
