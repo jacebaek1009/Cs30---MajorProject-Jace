@@ -171,9 +171,9 @@ function draw() {
       room2();
       strawberryTea.hide();
       matcha.hide();
-      baskets.push(new Basket(width / 4, height / 2, 50, color(255, 0, 0)));
-      baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
-      baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
+      baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket, 50));
+      // baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
+      // baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
       for (let basket of baskets) {
         basket.display();
       }
@@ -264,11 +264,11 @@ function mousePressed(){
   for (let basket of baskets) {
     if (basket.contains(mouseX, mouseY)) {
       if (!pickedSquare) {
-        pickedSquare = new Square(basket.x, basket.y, 30, basket.color);
+        pickedSquare = new Ingredients(basket.x, basket.y, 30, egg);
         pickedFromBasket = true;
       } else {
         pickedSquare.release();
-        pickedSquare = new Square(basket.x, basket.y, 30, basket.color);
+        pickedSquare = new Ingredients(basket.x, basket.y, 30, egg);
         pickedFromBasket = true;
       }
       break;
@@ -356,12 +356,12 @@ function roomOrder() {
   console.log(level1Order1);
 }
 
-class Square {
-  constructor(x, y, size, color) {
+class Ingredients {
+  constructor(x, y, size, image) {
     this.x = x;
     this.y = y;
     this.size = size;
-    this.color = color;
+    this.image = image;
     this.isPicked = true;
   }
   update(x, y) {
@@ -371,8 +371,7 @@ class Square {
     }
   }
   display() {
-    fill(this.color);
-    rect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+    image(this.image, this.x, this.y, this.size, this.size);
   }
   release() {
     this.isPicked = false;
@@ -380,27 +379,24 @@ class Square {
 }
 
 class Basket {
-  constructor(x, y, size, image) {
+  constructor(x, y, size, image, hitRadius) {
     this.x = x;
     this.y = y;
     this.size = size;
-    this.image = image
+    this.image = image;
+    this.hitRadius = hitRadius;
   }
 
 
   contains(x, y) {
     return (
-      x > this.x - this.size / 2 &&
-      x < this.x + this.size / 2 &&
-      y > this.y - this.size / 2 &&
-      y < this.y + this.size / 2
+      dist(x, y, this.x, this.y) < this.size / 2 + this.hitRadius
     );
   }
 
 
   display() {
-    fill(this.color);
-    rect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+    image(this.image, this.x, this.y, this.size, this.size);
   }
 }
 
@@ -456,12 +452,7 @@ class CustomerEva extends Customerobject {
   
   assignOrder() {
     if(this.dx === 0) {
-
-      let orders = ["salmon", "egg"];
-    
-      this.order = orders;
       didOrder = true;
-      console.log(`Customer at (${this.x}, ${this.y}) has ordered: ${this.order}`);
     }
   }
   
