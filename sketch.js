@@ -56,8 +56,11 @@ let baskets = [];
 let pickedSquare = null;
 let placedSquares = [];
 let riceWhite;
+let whiteRiceNori;
 
 let riceCooker;
+let nori;
+let noriArray = [];
 
 let order;
 let didOrder = false;
@@ -95,8 +98,9 @@ function preload() {
   
   demoCustomer = loadImage("demo customer.png");
   
-  sushiRoll = loadImage("sushi.png");
+  nori = loadImage("sushi.png");
   riceBowlWhite = loadImage("whiteRice.png");
+  whiteRiceNori = loadImage("whiteRiceOn.png");
 
   strawberryPic = loadImage("strawberrytea.png");
   matchaPic = loadImage("matcha.png");
@@ -209,6 +213,9 @@ function draw() {
         }
       }
       room1();
+      for (let nori of noriArray) {
+        nori.display();
+      }
       riceCookerInstance.display();
       strawberryTea.hide();
       matcha.hide();
@@ -229,12 +236,11 @@ function draw() {
         pickedSquare.update(mouseX, mouseY);
         pickedSquare.display();
       }
-      displaySushi();
+
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
       displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
       displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-      displaySushi();
     }
     else if(currentRoom === 2) {
       for (let basket of baskets) {
@@ -294,38 +300,43 @@ function draw() {
 
       if (strawberryVisible) {
         image(strawberryPic,700, 370, 150, 200);
-        matchaVisible.hide();
-        mangoVisible.hide();
-        bSugarVisible.hide();
-        taroVisible.hide();
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
       }
       if (matchaVisible) {
         image(matchaPic,700, 370, 150, 200);
-        strawberryVisible.hide();
-        mangoVisible.hide();
-        bSugarVisible.hide();
-        taroVisible.hide();
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
       }
       if (mangoVisible) {
         image(mangoPic,700, 370, 150, 200);
-        strawberryVisible.hide();
-        matchaVisible.hide();
-        bSugarVisible.hide();
-        taroVisible.hide();
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
       }
       if (bSugarVisible) {
         image(sugarPic,700, 370, 150, 200);
-        strawberryVisible.hide();
-        matchaVisible.hide();
-        mangoVisible.hide();
-        taroVisible.hide();
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
       }
       if (taroVisible) {
         image(taroPic,700, 370, 150, 200);
-        strawberryVisible.hide();
-        matchaVisible.hide();
-        mangoVisible.hide();
-        bSugarVisible.hide();
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
       }
     }
     else if(currentRoom === 4){
@@ -595,6 +606,7 @@ class RiceCooker {
     if (this.hasWhiteRice) {
       this.hasWhiteRice = false;
       this.cookingTime = 0;
+      noriArray.push(new Nori(sushi.x, sushi.y, 700, nori))
       console.log("rice taken out");
     }
   }
@@ -618,6 +630,19 @@ class RiceCooker {
       // Display white rice inside the rice cooker
       image(riceWhite.image, this.x, this.y, this.size, this.size);
     }
+  }
+}
+
+class Nori {
+  constructor(x, y, size, image) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.image = image;
+  }
+
+  display() {
+    image(this.image, this.x, this.y, this.size, this.size);
   }
 }
  
@@ -704,24 +729,20 @@ function bottomRect() {
 
 function spawnSushi() {
   let sushi = {
-    x: windowWidth - 900,
+    x: windowWidth - 1100,
     y: windowHeight - 600,
-    width: 400,
+    width: 1000,
     height: 400,
     image: sushiRoll
   };
   return sushi;
 }
 
-function displaySushi() {
-  image(sushi.image, sushi.x, sushi.y, sushi.width, sushi.height);
-}
-
 function spawnRiceBowlWhite() {
   let riceWhite = {
     x: windowWidth - 1200,
     y: windowHeight - 950,
-    width: 350,
+    width: 300,
     height: 200,
     image: riceBowlWhite
   };
