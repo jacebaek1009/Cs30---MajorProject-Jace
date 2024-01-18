@@ -467,7 +467,8 @@ function mousePressed(){
 
 function mouseClicked() {
   for (let i = 0; i < customerArray.length; i++) {
-    if (customerArray[i].customerClicked(mouseX, mouseY)) {
+    if (customerArray[i].orderClicked(mouseX, mouseY)) {
+      roomOrder();
       customerArray.splice(i, 1);
       adjustCustomer(i);
       break;
@@ -491,10 +492,10 @@ function mouseClicked() {
     room3();
   }
   
-  let isClickedOrder = isInButton(mouseX, mouseY, windowHeight - 350, windowHeight - 450 + 115, 500, 600);
-  if(isClickedOrder){
-    roomOrder();
-  }  
+  // let isClickedOrder = isInButton(mouseX, mouseY, windowHeight - 350, windowHeight - 450 + 115, 500, 600);
+  // if(isClickedOrder){
+  //   roomOrder();
+  // }  
 }
 
 
@@ -715,8 +716,8 @@ class CustomerEva extends Customerobject {
     }
   }
   
-  customerClicked(mx, my) {
-    return mx >= this.x && mx <= this.x + this.size && my >= this.y && my <= this.y + this.size;
+  orderClicked(mx, my) {
+    return mx, my, windowHeight - 350, windowHeight - 450 + 115, 500, 600
   }
 }
 
