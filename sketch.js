@@ -12,6 +12,10 @@ let tofu;
 let eggBasket;
 let tofuBasket;
 let salmonBasket;
+
+let cookingScore = 100;
+let scoreIncrements = 0.01
+
 let room0_0;
 let room1_0;
 let room2_0;
@@ -43,6 +47,8 @@ let baskets = [];
 let pickedSquare = null;
 let placedSquares = [];
 let riceWhite;
+
+let riceCooker;
 
 let order;
 let didOrder = false;
@@ -76,27 +82,29 @@ function preload() {
   eggBasket = loadImage("eggbasket.png");
   tofuBasket = loadImage("tofuBasket.png")
   basket = loadImage("basket.png");
+  riceCooker = loadImage("ricePot.png");
   
   demoCustomer = loadImage("demo customer.png");
   
   sushiRoll = loadImage("sushi.png");
   riceBowlWhite = loadImage("whiteRice.png");
-
+  
   bgSound = loadSound("BGsound.mp3");
-  bgSound.setVolume(1.0);
-
+  bgSound.setVolume(0.2);
+  
   
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   
-  if (!bgSound.isPlaying()) {
-    bgSound.loop();
-  }
+  riceCookerInstance = new RiceCooker(200, windowHeight/2, 200, riceCooker)
 
   sushi = spawnSushi();
   
+  if (!bgSound.isPlaying()) {
+    bgSound.loop();
+  }
   const spacing = size + 20;
   
   let x = size;
@@ -117,19 +125,19 @@ function setup() {
   strawberryTea.size(200, 50);
   strawberryTea.style("background-color", "pink");
   strawberryTea.position(100, 100);
-
+  
   matcha = createButton("Matcha");
   matcha.size(200, 50);
   matcha.style("background-color", "green");
   matcha.position(350, 100);
-
+  
   mangoTea = createButton("Mango Tea");
   mangoTea.size(200, 50);
   mangoTea.style("background-color", "orange");
   mangoTea.position(600, 100);
-
-
-
+  
+  
+  
   if (strawberryVisible) {
     fill("pink");
     rect(700, 370, 150, 200);
@@ -180,8 +188,13 @@ function draw() {
       }
     }
     else if(currentRoom === 1) {
+      for (let basket of baskets) {
+        if(basket.remove) {
+          basket.removeFromArray();
+        }
+      }
       room1();
-      roomSwitched = false;
+      riceCookerInstance.display();
       strawberryTea.hide();
       matcha.hide();
       mangoTea.hide();
@@ -207,13 +220,17 @@ function draw() {
       displaySushi();
     }
     else if(currentRoom === 2) {
+      for (let basket of baskets) {
+        if(basket.remove) {
+          basket.removeFromArray();
+        }
+      }
       room2();
       roomSwitched = false;
       strawberryTea.hide();
       matcha.hide();
       mangoTea.hide();
       //baskets.push(new Basket(width / 4, height / 2, 50, eggBasket));
-      baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket, 50));
       baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket));
       // baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
       // baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
@@ -274,6 +291,7 @@ function draw() {
         }
       }
     }
+    riceCookerInstance.update();
     ordersDone++; 
   }
 
@@ -316,6 +334,14 @@ function keyPressed() {
 
 function mousePressed(){
   let pickedFromBasket = false;
+  if(riceCookerInstance.contains(mouseX, mouseY)) {
+    if (pickedSquare && pickedSquare.image === riceWhite.image) {
+      riceCookerInstance.putWhiteRice();
+    }
+    else {
+      riceCookerInstance.takeWhiteRice();
+    }
+  }
   for (let basket of baskets) {
     if(basket.image === eggBasket) {
       if (basket.contains(mouseX, mouseY)) {
@@ -467,6 +493,76 @@ class Basket {
   display() {
     image(this.image, this.x, this.y, this.size, this.size);
   }
+
+  removeFromArray() {
+    let index = baskets.indexOf(this);
+    if(index !== -1) {
+      baskets.splice(index, 1);
+    }
+  }
+
+  remove() {
+    this.toBeRemoved = true;
+  }
+}
+
+class RiceCooker {
+  constructor(x, y, size, image) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.image = image;
+    this.hasWhiteRice = false;
+    this.cookingTime = 0;
+    this.cookingDuration = 5000;
+  }
+
+  contains(x, y) {
+    return (
+      x >= this.x - this.size / 2 &&
+      x <= this.x + this.size / 2 &&
+      y >= this.y - this.size / 2 &&
+      y <= this.y + this.size / 2
+    );
+  }
+
+  putWhiteRice() {
+    if(pickedSquare && pickedSquare.image === riceWhite.image) {
+      this.hasWhiteRice = true;
+      this.cookingTime = millis();
+      pickedSquare.release();
+      pickedSquare = null;
+    }
+  }
+
+  takeWhiteRice() {
+    if (this.hasWhiteRice) {
+      this.hasWhiteRice = false;
+      this.cookingTime = 0;
+      console.log("rice taken out");
+    }
+  }
+
+  update() {
+    if (this.hasWhiteRice) {
+      const currentTime = millis() - this.cookingTime;
+      console.log("cookingTime: " + currentTime);
+      if(currentTime >= this.cookingDuration) {
+        if(cookingScore >= 0) {
+          cookingScore -= scoreIncrements;
+          console.log(cookingScore);
+        }
+      }
+    }
+  }
+
+  display() {
+    image(this.image, this.x, this.y, this.size, this.size);
+    if (this.hasWhiteRice) {
+      // Display white rice inside the rice cooker
+      image(riceWhite.image, this.x, this.y, this.size, this.size);
+    }
+  }
 }
  
 class HowTo {
@@ -553,14 +649,16 @@ function bottomRect() {
 function spawnSushi() {
   let sushi = {
     x: windowWidth - 900,
-    y: windowHeight - 400,
+    y: windowHeight - 600,
+    width: 400,
+    height: 400,
     image: sushiRoll
   };
   return sushi;
 }
 
 function displaySushi() {
-  image(sushi.image, sushi.x, sushi.y);
+  image(sushi.image, sushi.x, sushi.y, sushi.width, sushi.height);
 }
 
 function spawnRiceBowlWhite() {
