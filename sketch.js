@@ -15,6 +15,7 @@ let salmonBasket;
 
 let cookingScore = 100;
 let scoreIncrements = 0.01
+let orderTicket;
 
 let room0_0;
 let room1_0;
@@ -64,7 +65,8 @@ let noriArray = [];
 
 let order;
 let didOrder = false;
-let level1Order1 = ["white Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"];
+let tickets = [["white Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"],
+              ["brown Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"]];
 
 const size = 200;
 const spacing = size + 20;
@@ -106,8 +108,9 @@ function preload() {
   matchaPic = loadImage("matcha.png");
   mangoPic = loadImage("mangotea.png");
   taroPic = loadImage("tarotea.png");
-  sugarPic = loadImage("BSugar.png")
+  sugarPic = loadImage("BSugar.png");
 
+  orderTicket = loadImage("orderTicket.png");
 
   bgSound = loadSound("Bgback.mp3");
   bgSound.setVolume(1.0);
@@ -345,12 +348,29 @@ function draw() {
         if (millis() > orderTimer + orderTime) {
           room0();
           orderTimer = millis();
+      }
+      for (let i = 0; i < tickets.length; i++) {
+        image(demoCustomer, windowWidth - 800, windowHeight/2 + i * 300, 700, 700);
+        image(orderTicket, windowWidth - 800, windowHeight/2 - 200 + i * 300, 200, 200);
+
+        // Write down individual orders on each ticket
+        fill("black");
+        textSize(20);
+        textAlign(LEFT, CENTER);
+        for (let j = 0; j < tickets[i].length; j++) {
+          text(tickets[i][j], windowWidth - 780, windowHeight/2 - 160 + i * 300 + j * 30);
+        }
+
+        // Add a delay between orders for each customer
+        if (millis() > orderTimer + orderTime * (i + 1)) {
+          orderTimer = millis();
         }
       }
     }
-    riceCookerInstance.update();
-    ordersDone++; 
   }
+  riceCookerInstance.update();
+  ordersDone++; 
+}
 
 
 function toggleStrawberry() {
@@ -508,7 +528,6 @@ function room3() {
 function roomOrder() {
   background(room0_0);
   currentRoom = 4;
-  console.log(level1Order1);
 }
 
 class Ingredient {
