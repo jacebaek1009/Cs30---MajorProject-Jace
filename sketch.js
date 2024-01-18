@@ -98,9 +98,9 @@ function preload() {
   
   demoCustomer = loadImage("demo customer.png");
   
-  nori = loadImage("sushi.png");
+  nori = loadImage("whiteRiceOn.png");
   riceBowlWhite = loadImage("whiteRice.png");
-  whiteRiceNori = loadImage("whiteRiceOn.png");
+
 
   strawberryPic = loadImage("strawberrytea.png");
   matchaPic = loadImage("matcha.png");
@@ -119,8 +119,6 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   
   riceCookerInstance = new RiceCooker(200, windowHeight/2, 200, riceCooker)
-
-  sushi = spawnSushi();
   
   if (!bgSound.isPlaying()) {
     bgSound.loop();
@@ -160,12 +158,12 @@ function setup() {
   bSugarTea.size(200, 50);
   bSugarTea.style("background-color", "brown");
   bSugarTea.position(850, 100);
-
+  
   taroTea = createButton("Taro Milk Tea");
   taroTea.size(200, 50);
   taroTea.style("background-color", "purple");
   taroTea.position(1100, 100);
-
+  
   bgSound.play();
 }
 
@@ -240,6 +238,7 @@ function draw() {
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
       displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+
       displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
     }
     else if(currentRoom === 2) {
@@ -271,8 +270,6 @@ function draw() {
         pickedSquare.update(mouseX, mouseY);
         pickedSquare.display();
       }
-      // baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
-      // baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
 
       bottomRect();
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
@@ -423,6 +420,7 @@ function mousePressed(){
         break;
       }
     }
+
     if(basket.image === riceBowlWhite) {
       if (basket.contains(mouseX, mouseY)) {
         if (!pickedSquare) {
@@ -444,9 +442,6 @@ function mousePressed(){
     pickedSquare = null;
   }
 }
-
-
-
 
 
 function mouseClicked() {
@@ -730,7 +725,7 @@ function bottomRect() {
 function spawnSushi() {
   let sushi = {
     x: windowWidth - 1100,
-    y: windowHeight - 600,
+    y: windowHeight - 800,
     width: 1000,
     height: 400,
     image: sushiRoll
