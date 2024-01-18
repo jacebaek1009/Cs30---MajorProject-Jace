@@ -77,7 +77,7 @@ function preload() {
   basket = loadImage("basket.png");
   
   demoCustomer = loadImage("demo customer.png");
-
+  
   sushiRoll = loadImage("sushi.png");
   riceBowlWhite = loadImage("whiteRice.png");
 
@@ -95,24 +95,24 @@ function setup() {
   }
 
   sushi = spawnSushi();
-
+  
   const spacing = size + 20;
-
+  
   let x = size;
-
+  
   sushi = spawnSushi();
   riceWhite = spawnRiceBowlWhite();
-
+  
   
   let predict = new HowTo(windowWidth - 500, windowHeight/2, 50, 50, 5);
   howToArray.push(predict);
   
   for(let i = 0; i < customerNum; i++) {
-      const customerEva = new CustomerEva(windowWidth, windowHeight - 300, 15, 10, size, demoCustomer);
-      customerArray.push(customerEva);
-      x -= spacing;
+    const customerEva = new CustomerEva(windowWidth, windowHeight - 300, 15, 10, size, demoCustomer);
+    customerArray.push(customerEva);
+    x -= spacing;
   }
-
+  
   strawberryTea = createButton("Strawberry Tea");
   strawberryTea.size(200, 50);
   strawberryTea.style("background-color", "pink");
@@ -185,13 +185,25 @@ function draw() {
       matcha.hide();
       mangoTea.hide();
       bottomRect();
+      baskets.push(new Basket(riceWhite.x, riceWhite.y, riceWhite.width, riceWhite.image));
+      for (let basket of baskets) {
+        basket.display();
+      }
+      
+      for (let square of placedSquares) {
+        square.display();
+      }
+      
+      if (pickedSquare) {
+        pickedSquare.update(mouseX, mouseY);
+        pickedSquare.display();
+      }
       displaySushi();
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
       displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
       displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
       displaySushi();
-      displayRiceWhite();
     }
     else if(currentRoom === 2) {
       room2();
@@ -199,20 +211,23 @@ function draw() {
       matcha.hide();
       mangoTea.hide();
       baskets.push(new Basket(width / 4, height / 2, 50, eggBasket));
+      baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket, 50));
       // baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
       // baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
       for (let basket of baskets) {
         basket.display();
       }
-    
+      
       for (let square of placedSquares) {
         square.display();
       }
-    
+      
       if (pickedSquare) {
         pickedSquare.update(mouseX, mouseY);
         pickedSquare.display();
       }
+      // baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
+      // baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
 
       bottomRect();
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
@@ -255,9 +270,10 @@ function draw() {
           orderTimer = millis();
         }
       }
+    }
     ordersDone++; 
   }
-}
+
 
 function toggleStrawberry() {
   strawberryVisible = !strawberryVisible;
@@ -297,18 +313,32 @@ function keyPressed() {
 
 function mousePressed(){
   let pickedFromBasket = false;
-
   for (let basket of baskets) {
-    if (basket.contains(mouseX, mouseY)) {
-      if (!pickedSquare) {
-        pickedSquare = new Square(basket.x, basket.y, 30, basket.color);
-        pickedFromBasket = true;
-      } else {
-        pickedSquare.release();
-        pickedSquare = new Square(basket.x, basket.y, 30, basket.color);
-        pickedFromBasket = true;
+    if(basket.image === eggBasket) {
+      if (basket.contains(mouseX, mouseY)) {
+        if (!pickedSquare) {
+          pickedSquare = new Ingredient(basket.x, basket.y, 30, egg);
+          pickedFromBasket = true;
+        } else {
+          pickedSquare.release();
+          pickedSquare = new Ingredient(basket.x, basket.y, 30, egg);
+          pickedFromBasket = true;
+        }
+        break;
       }
-      break;
+    }
+    if(basket.image === riceBowlWhite) {
+      if (basket.contains(mouseX, mouseY)) {
+        if (!pickedSquare) {
+          pickedSquare = new Ingredient(basket.x, basket.y, 30, basket.image);
+          pickedFromBasket = true;
+        } else {
+          pickedSquare.release();
+          pickedSquare = new Ingredient(basket.x, basket.y, 30, basket.image);
+          pickedFromBasket = true;
+        }
+        break;
+      }
     }
   }
 
@@ -318,6 +348,8 @@ function mousePressed(){
     pickedSquare = null;
   }
 }
+
+
 
 
 
@@ -354,11 +386,6 @@ function mouseClicked() {
 }
 
 
-function mouseReleased() {
-  basketSelected = false;
-  selectedBasket = null;
-}
-
 function adjustCustomer(startPos) {
   let x = customerArray[startPos].x;
   for (let i = startPos; i < customerArray.length; i++){
@@ -393,12 +420,12 @@ function roomOrder() {
   console.log(level1Order1);
 }
 
-class Square {
-  constructor(x, y, size, color) {
+class Ingredient {
+  constructor(x, y, size, image) {
     this.x = x;
     this.y = y;
     this.size = size;
-    this.color = color;
+    this.image = image;
     this.isPicked = true;
   }
   update(x, y) {
@@ -408,8 +435,7 @@ class Square {
     }
   }
   display() {
-    fill(this.color);
-    rect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+    image(this.image, this.x, this.y, this.size, this.size);
   }
   release() {
     this.isPicked = false;
@@ -417,26 +443,24 @@ class Square {
 }
 
 class Basket {
-  constructor(x, y, size, image) {
+  constructor(x, y, size, image, hitRadius) {
     this.x = x;
     this.y = y;
     this.size = size;
     this.image = image;
+    this.hitRadius = hitRadius;
   }
 
 
   contains(x, y) {
     return (
-      x > this.x - this.size / 2 &&
-      x < this.x + this.size / 2 &&
-      y > this.y - this.size / 2 &&
-      y < this.y + this.size / 2
+      dist(x, y, this.x, this.y) < this.size / 2 + this.hitRadius
     );
   }
 
 
   display() {
-    image(this.image, this.x,this.y,this.size,this.size)
+    image(this.image, this.x, this.y, this.size, this.size);
   }
 }
 
@@ -492,12 +516,7 @@ class CustomerEva extends Customerobject {
   
   assignOrder() {
     if(this.dx === 0) {
-
-      let orders = ["salmon", "egg"];
-    
-      this.order = orders;
       didOrder = true;
-      console.log(`Customer at (${this.x}, ${this.y}) has ordered: ${this.order}`);
     }
   }
   
@@ -545,15 +564,11 @@ function spawnRiceBowlWhite() {
   let riceWhite = {
     x: windowWidth - 950,
     y: windowHeight - 650,
-    width: 300,
+    width: 200,
     height: 200,
     image: riceBowlWhite
   };
   return riceWhite;
-}
-
-function displayRiceWhite() {
-  image(riceWhite.image, riceWhite.x, riceWhite.y, riceWhite.width, riceWhite.height);
 }
 
 function orderButton() {
