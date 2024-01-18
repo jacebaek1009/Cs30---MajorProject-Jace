@@ -157,9 +157,6 @@ function draw() {
     }
     else if(currentRoom === 1) {
       room1();
-      if(roomSwitched) {
-        let baskets = [];
-      }
       roomSwitched = false;
       strawberryTea.hide();
       matcha.hide();
@@ -186,11 +183,7 @@ function draw() {
     }
     else if(currentRoom === 2) {
       room2();
-      if(roomSwitched) {
-        let baskets = [];
-      }
       roomSwitched = false;
-      let baskets = [];
       strawberryTea.hide();
       matcha.hide();
       baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket));
@@ -339,12 +332,10 @@ function mouseClicked() {
   let isClicked2 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 260, windowWidth/4  + 200 + buttonWidth);
   if(isClicked2) {
     room1();
-    roomSwitched = true;
   }
   let isClicked3 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 540, windowWidth/4 + 600 + buttonWidth);
   if(isClicked3) {
     room2();
-    roomSwitched = true;
   }
   
   let isClicked4 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 750, windowWidth/4 + 900 + buttonWidth);
@@ -438,9 +429,7 @@ class Basket {
     image(this.image, this.x, this.y, this.size, this.size);
   }
 }
-
-
-
+ 
 class HowTo {
   constructor(x, y, width, height, many) {
     this.x = x;
