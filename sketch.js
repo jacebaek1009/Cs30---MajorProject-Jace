@@ -14,7 +14,7 @@ let tofuBasket;
 let salmonBasket;
 
 let cookingScore = 100;
-let scoreIncrements = 0.01
+let scoreIncrements = 0.01;
 let orderTicket;
 
 let room0_0;
@@ -58,6 +58,7 @@ let pickedSquare = null;
 let placedSquares = [];
 let riceWhite;
 let whiteRiceNori;
+let riceCookerInstance;
 
 let riceCooker;
 let nori;
@@ -743,8 +744,8 @@ function bottomRect() {
 
 function spawnSushi() {
   let sushi = {
-    x: windowWidth - 1100,
-    y: windowHeight - 800,
+    x: windowWidth - 1000,
+    y: windowHeight - 600,
     width: 1000,
     height: 400,
     image: sushiRoll
@@ -755,7 +756,7 @@ function spawnSushi() {
 function spawnRiceBowlWhite() {
   let riceWhite = {
     x: windowWidth - 1200,
-    y: windowHeight - 950,
+    y: windowHeight - 700,
     width: 300,
     height: 200,
     image: riceBowlWhite
