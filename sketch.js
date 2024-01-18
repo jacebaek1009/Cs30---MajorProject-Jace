@@ -33,11 +33,20 @@ let howToArray = [];
 let sushiRoll;
 let sushi;
 let strawberryTea;
+let strawberryPic;
 let strawberryVisible = false;
 let matcha;
+let matchaPic;
 let matchaVisible = false;
 let mangoTea;
+let mangoPic;
 let mangoVisible = false;
+let bSugarTea;
+let sugarPic;
+let bSugarVisible = false;
+let taroTea;
+let taroPic;
+let taroVisible = false;
 let riceBowlWhite;
 let baskets = [];
 let pickedSquare = null;
@@ -82,7 +91,14 @@ function preload() {
   sushiRoll = loadImage("sushi.png");
   riceBowlWhite = loadImage("whiteRice.png");
 
-  bgSound = loadSound("BGsound.mp3");
+  strawberryPic = loadImage("strawberrytea.png");
+  matchaPic = loadImage("matcha.png");
+  mangoPic = loadImage("mangotea.png");
+  taroPic = loadImage("tarotea.png");
+  sugarPic = loadImage("BSugar.png")
+
+
+  bgSound = loadSound("Bgback.mp3");
   bgSound.setVolume(1.0);
 
   
@@ -113,7 +129,7 @@ function setup() {
     customerArray.push(customerEva);
     x -= spacing;
   }
-  strawberryTea = createButton("Strawberry Tea");
+  strawberryTea = createButton("Strawberry Milk Tea");
   strawberryTea.size(200, 50);
   strawberryTea.style("background-color", "pink");
   strawberryTea.position(100, 100);
@@ -123,25 +139,21 @@ function setup() {
   matcha.style("background-color", "green");
   matcha.position(350, 100);
 
-  mangoTea = createButton("Mango Tea");
+  mangoTea = createButton("Mango Milk Tea");
   mangoTea.size(200, 50);
   mangoTea.style("background-color", "orange");
   mangoTea.position(600, 100);
 
+  bSugarTea = createButton("Brown Sugar Milk Tea");
+  bSugarTea.size(200, 50);
+  bSugarTea.style("background-color", "brown");
+  bSugarTea.position(850, 100);
 
+  taroTea = createButton("Taro Milk Tea");
+  taroTea.size(200, 50);
+  taroTea.style("background-color", "purple");
+  taroTea.position(1100, 100);
 
-  if (strawberryVisible) {
-    fill("pink");
-    rect(700, 370, 150, 200);
-  }
-  if (matchaVisible) {
-    fill("green");
-    rect(700, 370, 150, 200);
-  }
-  if (mangoVisible) {
-    fill("orange");
-    rect(700, 370, 150, 200);
-  }
   bgSound.play();
 }
 
@@ -153,6 +165,9 @@ function draw() {
       strawberryTea.hide();
       matcha.hide();
       mangoTea.hide();
+      bSugarTea.hide();
+      taroTea.hide();
+
       bottomRect();
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
@@ -188,6 +203,8 @@ function draw() {
       strawberryTea.hide();
       matcha.hide();
       mangoTea.hide();
+      bSugarTea.hide();
+      taroTea.hide();
       bottomRect();
       baskets.push(new Basket(riceWhite.x, riceWhite.y, riceWhite.width, riceWhite.image));
       for (let basket of baskets) {
@@ -219,6 +236,8 @@ function draw() {
       strawberryTea.hide();
       matcha.hide();
       mangoTea.hide();
+      bSugarTea.hide();
+      taroTea.hide();
       //baskets.push(new Basket(width / 4, height / 2, 50, eggBasket));
       baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket, 50));
       baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket));
@@ -255,26 +274,56 @@ function draw() {
       strawberryTea.show();
       matcha.show();
       mangoTea.show();
+      bSugarTea.show();
+      taroTea.show(); 
       strawberryTea.mousePressed(toggleStrawberry);
       matcha.mousePressed(toggleMatcha);
       mangoTea.mousePressed(toggleMango);
+      bSugarTea.mousePressed(toggleSugar);
+      taroTea.mousePressed(toggleTaro);
+
       if (strawberryVisible) {
-        fill("pink");
-        rect(700, 370, 150, 200);
+        image(strawberryPic,700, 370, 150, 200);
+        matchaVisible.hide();
+        mangoVisible.hide();
+        bSugarVisible.hide();
+        taroVisible.hide();
       }
       if (matchaVisible) {
-        fill("green");
-        rect(700, 370, 150, 200);
+        image(matchaPic,700, 370, 150, 200);
+        strawberryVisible.hide();
+        mangoVisible.hide();
+        bSugarVisible.hide();
+        taroVisible.hide();
       }
       if (mangoVisible) {
-        fill("orange");
-        rect(700, 370, 150, 200);
+        image(mangoPic,700, 370, 150, 200);
+        strawberryVisible.hide();
+        matchaVisible.hide();
+        bSugarVisible.hide();
+        taroVisible.hide();
+      }
+      if (bSugarVisible) {
+        image(sugarPic,700, 370, 150, 200);
+        strawberryVisible.hide();
+        matchaVisible.hide();
+        mangoVisible.hide();
+        taroVisible.hide();
+      }
+      if (taroVisible) {
+        image(taroPic,700, 370, 150, 200);
+        strawberryVisible.hide();
+        matchaVisible.hide();
+        mangoVisible.hide();
+        bSugarVisible.hide();
       }
     }
     else if(currentRoom === 4){
       strawberryTea.hide();
       matcha.hide();
       mangoTea.hide();
+      bSugarTea.hide();
+      taroTea.hide();
         if (millis() > orderTimer + orderTime) {
           room0();
           orderTimer = millis();
@@ -294,6 +343,13 @@ function toggleMatcha() {
 function toggleMango() {
   mangoVisible = !mangoVisible;
 }
+function toggleSugar() {
+  bSugarVisible = !bSugarVisible;
+}
+function toggleTaro() {
+  taroVisible = !taroVisible;
+}
+
 
 function keyPressed() {
   if(keyCode === RIGHT_ARROW) {
