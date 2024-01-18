@@ -56,6 +56,8 @@ let level1 = true;
 let gaveFood = false;
 let ordersDone = 0;
 
+let roomSwitched = false;
+
 function preload() {
   room0_0 = loadImage("order-station.png");
   room1_0 = loadImage("cooking station.png");
@@ -101,7 +103,6 @@ function setup() {
     customerArray.push(customerEva);
     x -= spacing;
   }
-  
   strawberryTea = createButton("Strawberry Tea");
   strawberryTea.size(200, 50);
   strawberryTea.style("background-color", "pink");
@@ -156,6 +157,10 @@ function draw() {
     }
     else if(currentRoom === 1) {
       room1();
+      if(roomSwitched) {
+        let baskets = [];
+      }
+      roomSwitched = false;
       strawberryTea.hide();
       matcha.hide();
       bottomRect();
@@ -181,9 +186,14 @@ function draw() {
     }
     else if(currentRoom === 2) {
       room2();
+      if(roomSwitched) {
+        let baskets = [];
+      }
+      roomSwitched = false;
+      let baskets = [];
       strawberryTea.hide();
       matcha.hide();
-      baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket, 50));
+      baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket));
       // baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
       // baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
       for (let basket of baskets) {
@@ -329,10 +339,12 @@ function mouseClicked() {
   let isClicked2 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 260, windowWidth/4  + 200 + buttonWidth);
   if(isClicked2) {
     room1();
+    roomSwitched = true;
   }
   let isClicked3 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 540, windowWidth/4 + 600 + buttonWidth);
   if(isClicked3) {
     room2();
+    roomSwitched = true;
   }
   
   let isClicked4 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 750, windowWidth/4 + 900 + buttonWidth);
@@ -404,18 +416,20 @@ class Ingredient {
 }
 
 class Basket {
-  constructor(x, y, size, image, hitRadius) {
+  constructor(x, y, size, image) {
     this.x = x;
     this.y = y;
     this.size = size;
     this.image = image;
-    this.hitRadius = hitRadius;
   }
 
 
   contains(x, y) {
     return (
-      dist(x, y, this.x, this.y) < this.size / 2 + this.hitRadius
+      x >= this.x - this.size / 2 &&
+      x <= this.x + this.size / 2 &&
+      y >= this.y - this.size / 2 &&
+      y <= this.y + this.size / 2
     );
   }
 
@@ -523,9 +537,9 @@ function displaySushi() {
 
 function spawnRiceBowlWhite() {
   let riceWhite = {
-    x: windowWidth - 950,
-    y: windowHeight - 650,
-    width: 200,
+    x: windowWidth - 1200,
+    y: windowHeight - 950,
+    width: 350,
     height: 200,
     image: riceBowlWhite
   };
