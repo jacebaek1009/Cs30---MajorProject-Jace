@@ -210,7 +210,7 @@ function draw() {
       strawberryTea.hide();
       matcha.hide();
       mangoTea.hide();
-      baskets.push(new Basket(width / 4, height / 2, 50, eggBasket));
+      //baskets.push(new Basket(width / 4, height / 2, 50, eggBasket));
       baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket, 50));
       // baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
       // baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
