@@ -88,7 +88,7 @@ function preload() {
   room3_0 = loadImage("teaStation.png");
   room4_0 = loadImage("OrderStation2.png")
 
-
+  
   egg = loadImage("egg.png");
   salmon = loadImage("salmon.png");
   tofu = loadImage("tofu.png");
@@ -103,7 +103,7 @@ function preload() {
   
   nori = loadImage("whiteRiceOn.png");
   riceBowlWhite = loadImage("whiteRice.png");
-
+  
 
   strawberryPic = loadImage("strawberrytea.png");
   matchaPic = loadImage("matcha.png");
@@ -123,8 +123,8 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   
   riceCookerInstance = new RiceCooker(200, windowHeight/2, 200, riceCooker)
-  
-  if (!bgSound.isPlaying()) {
+
+    if (!bgSound.isPlaying()) {
     bgSound.loop();
   }
   const spacing = size + 20;
@@ -162,12 +162,12 @@ function setup() {
   bSugarTea.size(200, 50);
   bSugarTea.style("background-color", "brown");
   bSugarTea.position(850, 100);
-  
+
   taroTea = createButton("Taro Milk Tea");
   taroTea.size(200, 50);
   taroTea.style("background-color", "purple");
   taroTea.position(1100, 100);
-  
+
   bgSound.play();
 }
 
@@ -215,7 +215,7 @@ function draw() {
         }
       }
       room1();
-      for (let nori of noriArray) {
+for (let nori of noriArray) {
         nori.display();
       }
       riceCookerInstance.display();
@@ -238,13 +238,13 @@ function draw() {
         pickedSquare.update(mouseX, mouseY);
         pickedSquare.display();
       }
-
+      
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
       displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
 
       displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-    }
+          }
     else if(currentRoom === 2) {
       for (let basket of baskets) {
         if(basket.remove) {
@@ -274,7 +274,7 @@ function draw() {
         pickedSquare.update(mouseX, mouseY);
         pickedSquare.display();
       }
-
+      
       bottomRect();
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
@@ -349,8 +349,8 @@ function draw() {
         if (millis() > orderTimer + orderTime) {
           room0();
           orderTimer = millis();
-      }
-      for (let i = 0; i < tickets.length; i++) {
+        }
+for (let i = 0; i < tickets.length; i++) {
         image(demoCustomer, windowWidth - 800, windowHeight/2 + i * 300, 700, 700);
         image(orderTicket, windowWidth - 800, windowHeight/2 - 200 + i * 300, 200, 200);
 
@@ -367,11 +367,11 @@ function draw() {
           orderTimer = millis();
         }
       }
+      }
     }
+    riceCookerInstance.update();
+    ordersDone++; 
   }
-  riceCookerInstance.update();
-  ordersDone++; 
-}
 
 
 function toggleStrawberry() {
@@ -529,7 +529,7 @@ function room3() {
 function roomOrder() {
   background(room0_0);
   currentRoom = 4;
-}
+  }
 
 class Ingredient {
   constructor(x, y, size, image) {
@@ -621,7 +621,7 @@ class RiceCooker {
     if (this.hasWhiteRice) {
       this.hasWhiteRice = false;
       this.cookingTime = 0;
-      noriArray.push(new Nori(sushi.x, sushi.y, 700, nori))
+noriArray.push(new Nori(sushi.x, sushi.y, 700, nori))
       console.log("rice taken out");
     }
   }
@@ -647,7 +647,7 @@ class RiceCooker {
     }
   }
 }
-
+ 
 class Nori {
   constructor(x, y, size, image) {
     this.x = x;
