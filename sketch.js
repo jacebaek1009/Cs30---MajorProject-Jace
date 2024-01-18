@@ -36,7 +36,8 @@ let strawberryTea;
 let strawberryVisible = false;
 let matcha;
 let matchaVisible = false;
-let buttonVisible = false;
+let mangoTea;
+let mangoVisible = false;
 let riceBowlWhite;
 let baskets = [];
 let pickedSquare = null;
@@ -56,6 +57,7 @@ let level1 = true;
 let gaveFood = false;
 let ordersDone = 0;
 
+let bgSound;
 let roomSwitched = false;
 
 function preload() {
@@ -79,12 +81,20 @@ function preload() {
   
   sushiRoll = loadImage("sushi.png");
   riceBowlWhite = loadImage("whiteRice.png");
+
+  bgSound = loadSound("BGsound.mp3");
+  bgSound.setVolume(1.0);
+
   
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   
+  if (!bgSound.isPlaying()) {
+    bgSound.loop();
+  }
+
   sushi = spawnSushi();
   
   const spacing = size + 20;
@@ -106,12 +116,19 @@ function setup() {
   strawberryTea = createButton("Strawberry Tea");
   strawberryTea.size(200, 50);
   strawberryTea.style("background-color", "pink");
-  
+  strawberryTea.position(100, 100);
+
   matcha = createButton("Matcha");
   matcha.size(200, 50);
   matcha.style("background-color", "green");
-  strawberryTea.position(100, 100);
   matcha.position(350, 100);
+
+  mangoTea = createButton("Mango Tea");
+  mangoTea.size(200, 50);
+  mangoTea.style("background-color", "orange");
+  mangoTea.position(600, 100);
+
+
 
   if (strawberryVisible) {
     fill("pink");
@@ -121,14 +138,21 @@ function setup() {
     fill("green");
     rect(700, 370, 150, 200);
   }
+  if (mangoVisible) {
+    fill("orange");
+    rect(700, 370, 150, 200);
+  }
+  bgSound.play();
 }
 
 function draw() {  
+  
   if (level1 && !gaveFood) {
     if(currentRoom === 0) {
       room0();
       strawberryTea.hide();
       matcha.hide();
+      mangoTea.hide();
       bottomRect();
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
@@ -160,6 +184,7 @@ function draw() {
       roomSwitched = false;
       strawberryTea.hide();
       matcha.hide();
+      mangoTea.hide();
       bottomRect();
       baskets.push(new Basket(riceWhite.x, riceWhite.y, riceWhite.width, riceWhite.image));
       for (let basket of baskets) {
@@ -186,6 +211,9 @@ function draw() {
       roomSwitched = false;
       strawberryTea.hide();
       matcha.hide();
+      mangoTea.hide();
+      //baskets.push(new Basket(width / 4, height / 2, 50, eggBasket));
+      baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket, 50));
       baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket));
       // baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
       // baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
@@ -219,8 +247,10 @@ function draw() {
       displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
       strawberryTea.show();
       matcha.show();
+      mangoTea.show();
       strawberryTea.mousePressed(toggleStrawberry);
       matcha.mousePressed(toggleMatcha);
+      mangoTea.mousePressed(toggleMango);
       if (strawberryVisible) {
         fill("pink");
         rect(700, 370, 150, 200);
@@ -229,24 +259,33 @@ function draw() {
         fill("green");
         rect(700, 370, 150, 200);
       }
+      if (mangoVisible) {
+        fill("orange");
+        rect(700, 370, 150, 200);
+      }
     }
     else if(currentRoom === 4){
       strawberryTea.hide();
       matcha.hide();
-      if (millis() > orderTimer + orderTime) {
-        room0();
-        orderTimer = millis();
+      mangoTea.hide();
+        if (millis() > orderTimer + orderTime) {
+          room0();
+          orderTimer = millis();
+        }
       }
     }
     ordersDone++; 
   }
-}
+
 
 function toggleStrawberry() {
   strawberryVisible = !strawberryVisible;
 }
 function toggleMatcha() {
   matchaVisible = !matchaVisible;
+}
+function toggleMango() {
+  mangoVisible = !mangoVisible;
 }
 
 function keyPressed() {
