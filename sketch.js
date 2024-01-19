@@ -64,7 +64,7 @@ let riceCooker;
 let nori;
 let noriArray = [];
 
-let order;
+let orderArray = [];
 let didOrder = false;
 let tickets = [["white Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"],
               ["brown Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"]];
@@ -215,7 +215,7 @@ function draw() {
         }
       }
       room1();
-for (let nori of noriArray) {
+      for (let nori of noriArray) {
         nori.display();
       }
       riceCookerInstance.display();
@@ -244,7 +244,7 @@ for (let nori of noriArray) {
       displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
 
       displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-          }
+    }
     else if(currentRoom === 2) {
       for (let basket of baskets) {
         if(basket.remove) {
@@ -346,32 +346,23 @@ for (let nori of noriArray) {
       mangoTea.hide();
       bSugarTea.hide();
       taroTea.hide();
-        if (millis() > orderTimer + orderTime) {
-          room0();
-          orderTimer = millis();
-        }
-for (let i = 0; i < tickets.length; i++) {
-        image(demoCustomer, windowWidth - 800, windowHeight/2 + i * 300, 700, 700);
-        image(orderTicket, windowWidth - 800, windowHeight/2 - 200 + i * 300, 200, 200);
-
-        // Write down individual orders on each ticket
-        fill("black");
-        textSize(20);
-        textAlign(LEFT, CENTER);
-        for (let j = 0; j < tickets[i].length; j++) {
-          text(tickets[i][j], windowWidth - 780, windowHeight/2 - 160 + i * 300 + j * 30);
-        }
-
-        // Add a delay between orders for each customer
-        if (millis() > orderTimer + orderTime * (i + 1)) {
-          orderTimer = millis();
-        }
+      image(demoCustomer, windowWidth - 500, windowHeight/2, 600, 600);
+      new Tickets(windowWidth - 800, windowHeight/2);
+      for (let order of orderArray) {
+        order.startOrderTimer();
+        order.update();
+        order.display();
       }
+
+      if (millis() > orderTimer + orderTime) {
+        room0();
+        orderTimer = millis();
       }
     }
-    riceCookerInstance.update();
-    ordersDone++; 
   }
+  riceCookerInstance.update();
+  ordersDone++; 
+}
 
 
 function toggleStrawberry() {
@@ -466,12 +457,14 @@ function mousePressed(){
 
 
 function mouseClicked() {
-  for (let i = 0; i < customerArray.length; i++) {
-    if (customerArray[i].orderClicked(mouseX, mouseY)) {
-      roomOrder();
-      customerArray.splice(i, 1);
-      adjustCustomer(i);
-      break;
+  if(currentRoom === 0) {
+    for (let i = 0; i < customerArray.length; i++) {
+      if (customerArray[i].orderClicked(mouseX, mouseY)) {
+        roomOrder();
+        customerArray.splice(i, 1);
+        adjustCustomer(i);
+        break;
+      }
     }
   }
   let isClicked1 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 - 40, windowWidth/4 + buttonWidth);
@@ -530,7 +523,7 @@ function room3() {
 function roomOrder() {
   background(room0_0);
   currentRoom = 4;
-  }
+}
 
 class Ingredient {
   constructor(x, y, size, image) {
@@ -622,7 +615,7 @@ class RiceCooker {
     if (this.hasWhiteRice) {
       this.hasWhiteRice = false;
       this.cookingTime = 0;
-noriArray.push(new Nori(sushi.x, sushi.y, 700, nori))
+      noriArray.push(new Nori(sushi.x, sushi.y, 700, nori));
       console.log("rice taken out");
     }
   }
@@ -659,6 +652,47 @@ class Nori {
 
   display() {
     image(this.image, this.x, this.y, this.size, this.size);
+  }
+}
+
+class Tickets {
+  constructor(x, y, size) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.tickets = tickets;
+    this.orderTime = 0;
+    this.orderDuration = 8000;
+  }
+
+  contains(x, y) {
+    return (
+      x >= this.x - this.size / 2 &&
+      x <= this.x + this.size / 2 &&
+      y >= this.y - this.size / 2 &&
+      y <= this.y + this.size / 2
+    );
+  }
+
+  startOrderTimer() {
+    this.orderTimer = 0;
+    this.hasTicket = false;
+    this.canTake = false;
+  }
+
+  update() {
+    if(this.hasTicket) {
+      const currentTime = millis() - this.orderTime;
+      if(currentTime >= this.orderDuration) {
+        this.canTake = true;
+      }
+    }
+  }
+
+  display() {
+    if(this.canTake) {
+      image(orderTicket, mouseX, mouseY, 200, 400);
+    }
   }
 }
  
