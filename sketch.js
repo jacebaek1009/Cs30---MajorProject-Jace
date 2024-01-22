@@ -20,7 +20,7 @@ let tofuBasket;
 let salmonBasket;
 let crabBasket;
 
-let cookingScore = 100;
+let cookingScore = 0;
 let scoreIncrements = 0.01;
 let orderTicket;
 
@@ -39,8 +39,6 @@ let orderTimer = 0;
 let orderTime = 8000;
 
 let many = 3;
-
-let howToArray = [];
 
 let sushiRoll;
 let sushi;
@@ -91,6 +89,8 @@ let ordersDone = 0;
 
 let bgSound;
 let roomSwitched = false;
+
+let hasIngredient = false;
 
 function preload() {
   startScreen = loadImage("startscreen.png");
@@ -149,9 +149,6 @@ function setup() {
   
   sushi = spawnSushi();
   riceWhite = spawnRiceBowlWhite();
-    
-  let predict = new HowTo(windowWidth - 500, windowHeight/2, 50, 50, 5);
-  howToArray.push(predict);
   
   for(let i = 0; i < customerNum; i++) {
     const customerEva = new CustomerEva(windowWidth, windowHeight - 300, 15, 10, size, demoCustomer);
@@ -220,15 +217,185 @@ function draw() {
           customerEva.draw();
           customerEva.assignOrder();
         }
-        
-        if (didOrder) {
-          orderButton();
+      }
+    }
+    else if(currentRoom === 1) {
+      if(roomSwitched) {
+        placedSquares = [];
+      }
+      for (let basket of baskets) {
+        if(basket.remove) {
+          basket.removeFromArray();
         }
+      }
+      room1();
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
+      if(!switchRoomRice) {
+        for (let nori of noriArray) {
+          nori.display();
+        }
+      }
+      riceCookerInstance.display();
+      strawberryTea.hide();
+      matcha.hide();
+      mangoTea.hide();
+      bSugarTea.hide();
+      taroTea.hide();
+      bottomRect();
+      baskets.push(new Basket(riceWhite.x, riceWhite.y, riceWhite.width, riceWhite.image));
+      for (let basket of baskets) {
+        basket.display();
+      }
+      
+      for (let square of placedSquares) {
+        square.display();
+      }
+      
+      if (pickedSquare) {
+        pickedSquare.update(mouseX, mouseY);
+        pickedSquare.display();
+      }
+      
+      displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+      displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+      displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+
+      displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+
+      roomSwitched = false;
+    }
+    else if(currentRoom === 2) {
+      if(roomSwitched) {
+        placedSquares = [];
+      }
+      for (let basket of baskets) {
+        if(basket.remove) {
+          basket.removeFromArray();
+        }
+      }
+      room2();
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
+      if(cookedRice) {
+        for (let nori of noriArray) {
+          nori.display();
+        }
+        switchRoomRice = true;
         
-        for (let i = 0; i < customerArray.length - 1; i++) {
-          const currentCustomer = customerArray[i];
-          const nextCustomer = customerArray[i + 1];
-          const distance = nextCustomer.x - (currentCustomer.x + currentCustomer.size);
+      }
+      roomSwitched = false;
+      strawberryTea.hide();
+      matcha.hide();
+      mangoTea.hide();
+      bSugarTea.hide();
+      taroTea.hide();
+      baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket));
+      for (let basket of baskets) {
+        basket.display();
+      }
+      
+      for (let square of placedSquares) {
+        square.display();
+      }
+      
+      if (pickedSquare) {
+        pickedSquare.update(mouseX, mouseY);
+        pickedSquare.display();
+      }
+      
+      bottomRect();
+      displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+      displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+      displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+      displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+
+      hasIngredient = false;
+      roomSwitched = false;
+    }
+    else if(currentRoom === 3) {
+      room3();
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
+      bottomRect();
+      displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+      displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+      displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+      displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+      strawberryTea.show();
+      matcha.show();
+      mangoTea.show();
+      bSugarTea.show();
+      taroTea.show(); 
+      strawberryTea.mousePressed(toggleStrawberry);
+      matcha.mousePressed(toggleMatcha);
+      mangoTea.mousePressed(toggleMango);
+      bSugarTea.mousePressed(toggleSugar);
+      taroTea.mousePressed(toggleTaro);
+
+      if (strawberryVisible) {
+        image(strawberryPic,700, 370, 150, 200);
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
+      }
+      if (matchaVisible) {
+        image(matchaPic,700, 370, 150, 200);
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
+      }
+      if (mangoVisible) {
+        image(mangoPic,700, 370, 150, 200);
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
+      }
+      if (bSugarVisible) {
+        image(sugarPic,700, 370, 150, 200);
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
+      }
+      if (taroVisible) {
+        image(taroPic,700, 370, 150, 200);
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
+      }
+    }
+    else if(currentRoom === 4){
+      strawberryTea.hide();
+      matcha.hide();
+      mangoTea.hide();
+      bSugarTea.hide();
+      taroTea.hide();
+      image(demoCustomer, windowWidth - 500, windowHeight/2, 600, 600);
+      
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
+      if (millis() > orderTimer + orderTime) {
+        if (interactionAllowed) {
+          // Select a random order index
+          const orderIndex = Math.floor(random(orders.length));
           
           if (distance < 0) {
             nextCustomer.x = currentCustomer.x + currentCustomer.size + 1;
@@ -452,58 +619,49 @@ function mousePressed(){
         riceCookerInstance.takeWhiteRice();
       }
     }
-    for (let basket of baskets) {
-      if(basket.image === eggBasket) {
-        if (basket.contains(mouseX, mouseY)) {
-          if (!pickedSquare) {
-            pickedSquare = new Ingredient(basket.x, basket.y, 150, egg);
-            pickedFromBasket = true;
-          } else {
-            pickedSquare.release();
-            pickedSquare = new Ingredient(basket.x, basket.y, 150, egg);
-            pickedFromBasket = true;
-          }
-          break;
-        }
-            }
-    for (let basket of baskets) {
-      if (basket.image === salmonBasket && basket.contains(mouseX, mouseY)) {
-          if (!pickedSquare) {
-            pickedSquare = new Ingredient(basket.x, basket.y, 150, salmon);
-            pickedFromBasket = true;
-          } else {
-            pickedSquare.release();
-            pickedSquare = new Ingredient(basket.x, basket.y, 150, salmon);
-            pickedFromBasket = true;
-          }
-          break;
-        }
-      }   
-      for (let basket of baskets) {
-        if (basket.image === tofuBasket && basket.contains(mouseX, mouseY)) {
-            if (!pickedSquare) {
-              pickedSquare = new Ingredient(basket.x, basket.y, 90, tofu);
-              pickedFromBasket = true;
-            } else {
-              pickedSquare.release();
-              pickedSquare = new Ingredient(basket.x, basket.y, 90, tofu);
-              pickedFromBasket = true;
-            }
-            break;
-          }
-        }  
+    else {
+      riceCookerInstance.takeWhiteRice();
+    }
+  }
+  if(currentRoom === 2) {
+    for (let nori of noriArray) {
+      nori.checkEggPlacement(mouseX, mouseY);
+    }
+  }
 
-      if(basket.image === riceBowlWhite) {
-        if (basket.contains(mouseX, mouseY)) {
+  for (let basket of baskets) {
+    if(basket.image === eggBasket) {
+      if (basket.contains(mouseX, mouseY)) {
+        if (pickedSquare && pickedSquare.image === egg) {
+          // Check if the basket contains the same ingredient as the one in hand
+          pickedSquare.release();
+          pickedSquare = null;
+          hasIngredient = false;
+        } else {
           if (!pickedSquare) {
-            pickedSquare = new Ingredient(basket.x, basket.y, 100, basket.image);
+            pickedSquare = new Ingredient(mouseX, mouseY, 100, egg);
             pickedFromBasket = true;
+            hasIngredient = true;
           } else {
             pickedSquare.release();
-            pickedSquare = new Ingredient(basket.x, basket.y, 100, basket.image);
+            pickedSquare = new Ingredient(mouseX, mouseY, 100, egg);
             pickedFromBasket = true;
+            hasIngredient = true;
           }
-          break;
+        }
+        break;
+      }
+    }
+
+    if(basket.image === riceBowlWhite) {
+      if (basket.contains(mouseX, mouseY)) {
+        if (!pickedSquare) {
+          pickedSquare = new Ingredient(mouseX, mouseY, 30, basket.image);
+          pickedFromBasket = true;
+        } else {
+          pickedSquare.release();
+          pickedSquare = new Ingredient(mouseX, mouseY, 30, basket.image);
+          pickedFromBasket = true;
         }
       }
       if (sauceBottle.contains(mouseX, mouseY)) {
@@ -552,10 +710,12 @@ if(currentRoom === 0) {
   let isClicked2 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 260, windowWidth/4  + 200 + buttonWidth);
   if(isClicked2) {
     room1();
+    roomSwitched = true;
   }
   let isClicked3 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 540, windowWidth/4 + 600 + buttonWidth);
   if(isClicked3) {
     room2();
+    roomSwitched = true;
   }
   
   let isClicked4 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 750, windowWidth/4 + 900 + buttonWidth);
@@ -667,10 +827,10 @@ class Ingredient {
     this.image = image;
     this.isPicked = true;
   }
-  update(x, y) {
+  update() {
     if (this.isPicked) {
-      this.x = x;
-      this.y = y;
+      this.x = mouseX - this.size / 2;
+      this.y = mouseY - this.size / 2;
     }
   }
   display() {
@@ -742,6 +902,7 @@ class RiceCooker {
       this.cookingTime = millis();
       pickedSquare.release();
       pickedSquare = null;
+      switchRoomRice = false;
     }
   }
 
@@ -782,10 +943,70 @@ class Nori {
     this.y = y;
     this.size = size;
     this.image = image;
+    this.eggSquares = [];
+    this.createEggSquares();
+  }
+
+  createEggSquares() {
+    const squareSize = 80; // Adjust the size of each square
+    const numSquares = 5;
+    const spacing = 70; // Adjust the spacing between squares
+
+    for (let i = 0; i < numSquares; i++) {
+      const squareX = this.x - this.size / 2 + i * (squareSize + spacing);
+      const squareY = this.y;
+      this.eggSquares.push(new EggRef(squareX, squareY, squareSize));
+    }
   }
 
   display() {
     image(this.image, this.x, this.y, this.size, this.size);
+    for (const square of this.eggSquares) {
+      fill(255, 255, 0, 150); // Yellow with some transparency
+      rectMode(CENTER);
+      const shiftedX = square.x + 400;
+      const shiftY = square.y + 250;
+      rect(shiftedX, shiftY, square.size, square.size);
+    }
+    rectMode(CORNER); // Reset rectMode to CORNER after drawing squares
+  }
+
+  checkEggPlacement(eggX, eggY) {
+    if (pickedSquare && pickedSquare.isPicked) {
+      let closestSquare = null;
+      let closestDistance = Infinity;
+
+      for (const square of this.eggSquares) {
+        const distance = dist(eggX, eggY, square.x + 400 + square.size / 2, square.y + 250 + square.size / 2);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestSquare = square;
+        }
+      }
+
+      if (closestSquare) {
+        console.log("Egg placed near a square! Distance:", closestDistance);
+        // Additional actions based on the egg placement
+      }
+    }
+  }
+}
+class EggRef {
+  constructor(x, y, size) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+  }
+
+  contains(px, py) {
+    // Check if the point (px, py) is within the square
+    return (
+      px >= this.x - this.size / 2 &&
+      px <= this.x + this.size / 2 &&
+      py >= this.y - this.size / 2 &&
+      py <= this.y + this.size / 2
+    );
   }
 }
  
@@ -833,24 +1054,6 @@ class Tickets {
   }
 }
  
-class HowTo {
-  constructor(x, y, width, height, many) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.many = many;
-  }
-  display() {
-    rect(this.x, this.y, this.width, this.height);
-  }
-  move() {
-    for(let i = 0; i <= many; i++) {
-      this.x += 20;
-    }
-  }
-}
-
 class Customerobject {
   constructor (x, y, dx, dy, size, characters) {
     this.x = x;
@@ -917,7 +1120,7 @@ function bottomRect() {
 function spawnSushi() {
   let sushi = {
     x: windowWidth - 1000,
-    y: windowHeight - 600,
+    y: windowHeight - 900,
     width: 1000,
     height: 400,
     image: sushiRoll
