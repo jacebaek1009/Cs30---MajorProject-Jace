@@ -132,10 +132,10 @@ function setup() {
   if (!bgSound.isPlaying()) {
     bgSound.loop();
   }
+  riceCookerInstance = new RiceCooker(200, windowHeight/2, 200, riceCooker)
   const spacing = size + 20;
   
   let x = size;
-  riceCookerInstance = new RiceCooker(200, windowHeight/2, 200, riceCooker)
   
   sushi = spawnSushi();
   riceWhite = spawnRiceBowlWhite();
