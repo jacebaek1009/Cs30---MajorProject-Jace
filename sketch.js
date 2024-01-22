@@ -13,7 +13,7 @@ let eggBasket;
 let tofuBasket;
 let salmonBasket;
 
-let cookingScore = 100;
+let cookingScore = 0;
 let scoreIncrements = 0.01;
 let orderTicket;
 
@@ -32,8 +32,6 @@ let orderTimer = 0;
 let orderTime = 8000;
 
 let many = 3;
-
-let howToArray = [];
 
 let sushiRoll;
 let sushi;
@@ -86,6 +84,8 @@ let ordersDone = 0;
 let bgSound;
 let roomSwitched = false;
 
+let hasIngredient = false;
+
 function preload() {
   room0_0 = loadImage("order-station.png");
   room1_0 = loadImage("cooking station.png");
@@ -113,7 +113,7 @@ function preload() {
   strawberryPic = loadImage("strawberrytea.png");
   matchaPic = loadImage("matcha.png");
   mangoPic = loadImage("mangotea.png");
-  taroPic = loadImage("tarotea.png");
+  taroPic = loadImage("taroboba.png");
   sugarPic = loadImage("BSugar.png");
 
   orderTicket = loadImage("orderTicket.png");
@@ -139,9 +139,6 @@ function setup() {
   
   sushi = spawnSushi();
   riceWhite = spawnRiceBowlWhite();
-  
-  let predict = new HowTo(windowWidth - 500, windowHeight/2, 50, 50, 5);
-  howToArray.push(predict);
   
   for(let i = 0; i < customerNum; i++) {
     const customerEva = new CustomerEva(windowWidth, windowHeight - 300, 15, 10, size, demoCustomer);
@@ -218,6 +215,9 @@ function draw() {
       }
     }
     else if(currentRoom === 1) {
+      if(roomSwitched) {
+        placedSquares = [];
+      }
       for (let basket of baskets) {
         if(basket.remove) {
           basket.removeFromArray();
@@ -259,8 +259,13 @@ function draw() {
       displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
 
       displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+
+      roomSwitched = false;
     }
     else if(currentRoom === 2) {
+      if(roomSwitched) {
+        placedSquares = [];
+      }
       for (let basket of baskets) {
         if(basket.remove) {
           basket.removeFromArray();
@@ -284,10 +289,7 @@ function draw() {
       mangoTea.hide();
       bSugarTea.hide();
       taroTea.hide();
-      //baskets.push(new Basket(width / 4, height / 2, 50, eggBasket));
       baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket));
-      // baskets.push(new Basket(width / 2, height / 2, 50, color(0, 255, 0)));
-      // baskets.push(new Basket((3 * width) / 4, height / 2, 50, color(0, 0, 255)));
       for (let basket of baskets) {
         basket.display();
       }
@@ -306,6 +308,9 @@ function draw() {
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
       displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
       displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+
+      hasIngredient = false;
+      roomSwitched = false;
     }
     else if(currentRoom === 3) {
       room3();
@@ -454,16 +459,31 @@ function mousePressed(){
       riceCookerInstance.takeWhiteRice();
     }
   }
+  if(currentRoom === 2) {
+    for (let nori of noriArray) {
+      nori.checkEggPlacement(mouseX, mouseY);
+    }
+  }
+
   for (let basket of baskets) {
     if(basket.image === eggBasket) {
       if (basket.contains(mouseX, mouseY)) {
-        if (!pickedSquare) {
-          pickedSquare = new Ingredient(basket.x, basket.y, 30, egg);
-          pickedFromBasket = true;
-        } else {
+        if (pickedSquare && pickedSquare.image === egg) {
+          // Check if the basket contains the same ingredient as the one in hand
           pickedSquare.release();
-          pickedSquare = new Ingredient(basket.x, basket.y, 30, egg);
-          pickedFromBasket = true;
+          pickedSquare = null;
+          hasIngredient = false;
+        } else {
+          if (!pickedSquare) {
+            pickedSquare = new Ingredient(mouseX, mouseY, 100, egg);
+            pickedFromBasket = true;
+            hasIngredient = true;
+          } else {
+            pickedSquare.release();
+            pickedSquare = new Ingredient(mouseX, mouseY, 100, egg);
+            pickedFromBasket = true;
+            hasIngredient = true;
+          }
         }
         break;
       }
@@ -472,11 +492,11 @@ function mousePressed(){
     if(basket.image === riceBowlWhite) {
       if (basket.contains(mouseX, mouseY)) {
         if (!pickedSquare) {
-          pickedSquare = new Ingredient(basket.x, basket.y, 30, basket.image);
+          pickedSquare = new Ingredient(mouseX, mouseY, 30, basket.image);
           pickedFromBasket = true;
         } else {
           pickedSquare.release();
-          pickedSquare = new Ingredient(basket.x, basket.y, 30, basket.image);
+          pickedSquare = new Ingredient(mouseX, mouseY, 30, basket.image);
           pickedFromBasket = true;
         }
         break;
@@ -528,10 +548,12 @@ function mouseClicked() {
   let isClicked2 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 260, windowWidth/4  + 200 + buttonWidth);
   if(isClicked2) {
     room1();
+    roomSwitched = true;
   }
   let isClicked3 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 540, windowWidth/4 + 600 + buttonWidth);
   if(isClicked3) {
     room2();
+    roomSwitched = true;
   }
   
   let isClicked4 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 + 750, windowWidth/4 + 900 + buttonWidth);
@@ -583,10 +605,10 @@ class Ingredient {
     this.image = image;
     this.isPicked = true;
   }
-  update(x, y) {
+  update() {
     if (this.isPicked) {
-      this.x = x;
-      this.y = y;
+      this.x = mouseX - this.size / 2;
+      this.y = mouseY - this.size / 2;
     }
   }
   display() {
@@ -658,6 +680,7 @@ class RiceCooker {
       this.cookingTime = millis();
       pickedSquare.release();
       pickedSquare = null;
+      switchRoomRice = false;
     }
   }
 
@@ -699,10 +722,70 @@ class Nori {
     this.y = y;
     this.size = size;
     this.image = image;
+    this.eggSquares = [];
+    this.createEggSquares();
+  }
+
+  createEggSquares() {
+    const squareSize = 80; // Adjust the size of each square
+    const numSquares = 5;
+    const spacing = 70; // Adjust the spacing between squares
+
+    for (let i = 0; i < numSquares; i++) {
+      const squareX = this.x - this.size / 2 + i * (squareSize + spacing);
+      const squareY = this.y;
+      this.eggSquares.push(new EggRef(squareX, squareY, squareSize));
+    }
   }
 
   display() {
     image(this.image, this.x, this.y, this.size, this.size);
+    for (const square of this.eggSquares) {
+      fill(255, 255, 0, 150); // Yellow with some transparency
+      rectMode(CENTER);
+      const shiftedX = square.x + 400;
+      const shiftY = square.y + 250;
+      rect(shiftedX, shiftY, square.size, square.size);
+    }
+    rectMode(CORNER); // Reset rectMode to CORNER after drawing squares
+  }
+
+  checkEggPlacement(eggX, eggY) {
+    if (pickedSquare && pickedSquare.isPicked) {
+      let closestSquare = null;
+      let closestDistance = Infinity;
+
+      for (const square of this.eggSquares) {
+        const distance = dist(eggX, eggY, square.x + 400 + square.size / 2, square.y + 250 + square.size / 2);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestSquare = square;
+        }
+      }
+
+      if (closestSquare) {
+        console.log("Egg placed near a square! Distance:", closestDistance);
+        // Additional actions based on the egg placement
+      }
+    }
+  }
+}
+class EggRef {
+  constructor(x, y, size) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+  }
+
+  contains(px, py) {
+    // Check if the point (px, py) is within the square
+    return (
+      px >= this.x - this.size / 2 &&
+      px <= this.x + this.size / 2 &&
+      py >= this.y - this.size / 2 &&
+      py <= this.y + this.size / 2
+    );
   }
 }
 
@@ -767,24 +850,6 @@ class OrderTicket {
   }
 }
  
-class HowTo {
-  constructor(x, y, width, height, many) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.many = many;
-  }
-  display() {
-    rect(this.x, this.y, this.width, this.height);
-  }
-  move() {
-    for(let i = 0; i <= many; i++) {
-      this.x += 20;
-    }
-  }
-}
-
 class Customerobject {
   constructor (x, y, dx, dy, size, characters) {
     this.x = x;
@@ -848,7 +913,7 @@ function bottomRect() {
 function spawnSushi() {
   let sushi = {
     x: windowWidth - 1000,
-    y: windowHeight - 600,
+    y: windowHeight - 900,
     width: 1000,
     height: 400,
     image: sushiRoll
