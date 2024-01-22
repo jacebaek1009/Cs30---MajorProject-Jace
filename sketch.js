@@ -63,11 +63,16 @@ let riceCookerInstance;
 let riceCooker;
 let nori;
 let noriArray = [];
+let cookedRice = false;
+let switchRoomRice = false;
 
-let orderArray = [];
 let didOrder = false;
-let tickets = [["white Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"],
-              ["brown Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"]];
+const orders = [["1", "white Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"],
+              ["2", "brown Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"]];
+let tickets = [];
+let interactionAllowed = true;
+let startTime;
+let ticketDelay = 8000;
 
 const size = 200;
 const spacing = size + 20;
@@ -121,19 +126,20 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  startTime = millis();
   
-  riceCookerInstance = new RiceCooker(200, windowHeight/2, 200, riceCooker)
-
-    if (!bgSound.isPlaying()) {
+  
+  if (!bgSound.isPlaying()) {
     bgSound.loop();
   }
   const spacing = size + 20;
   
   let x = size;
+  riceCookerInstance = new RiceCooker(200, windowHeight/2, 200, riceCooker)
   
   sushi = spawnSushi();
   riceWhite = spawnRiceBowlWhite();
- 
+  
   let predict = new HowTo(windowWidth - 500, windowHeight/2, 50, 50, 5);
   howToArray.push(predict);
   
@@ -151,22 +157,22 @@ function setup() {
   matcha.size(200, 50);
   matcha.style("background-color", "green");
   matcha.position(350, 100);
-
+  
   mangoTea = createButton("Mango Milk Tea");
   mangoTea.size(200, 50);
   mangoTea.style("background-color", "orange");
   mangoTea.position(600, 100);
-
+  
   bSugarTea = createButton("Brown Sugar Milk Tea");
   bSugarTea.size(200, 50);
   bSugarTea.style("background-color", "brown");
   bSugarTea.position(850, 100);
-
+  
   taroTea = createButton("Taro Milk Tea");
   taroTea.size(200, 50);
   taroTea.style("background-color", "purple");
   taroTea.position(1100, 100);
-
+  
   bgSound.play();
 }
 
@@ -175,12 +181,17 @@ function draw() {
   if (level1 && !gaveFood) {
     if(currentRoom === 0) {
       room0();
+      interactionAllowed = true;
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
       strawberryTea.hide();
       matcha.hide();
       mangoTea.hide();
       bSugarTea.hide();
       taroTea.hide();
-
+      
       bottomRect();
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
@@ -192,11 +203,10 @@ function draw() {
         customerEva.draw();
         customerEva.assignOrder();
       }
-      
-      if (didOrder) {
+
+      if(didOrder) {
         orderButton();
       }
-      
       for (let i = 0; i < customerArray.length - 1; i++) {
         const currentCustomer = customerArray[i];
         const nextCustomer = customerArray[i + 1];
@@ -214,8 +224,14 @@ function draw() {
         }
       }
       room1();
-      for (let nori of noriArray) {
-        nori.display();
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
+      if(!switchRoomRice) {
+        for (let nori of noriArray) {
+          nori.display();
+        }
       }
       riceCookerInstance.display();
       strawberryTea.hide();
@@ -251,6 +267,17 @@ function draw() {
         }
       }
       room2();
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
+      if(cookedRice) {
+        for (let nori of noriArray) {
+          nori.display();
+        }
+        switchRoomRice = true;
+        
+      }
       roomSwitched = false;
       strawberryTea.hide();
       matcha.hide();
@@ -282,6 +309,10 @@ function draw() {
     }
     else if(currentRoom === 3) {
       room3();
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
       bottomRect();
       displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
       displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
@@ -347,8 +378,20 @@ function draw() {
       taroTea.hide();
       image(demoCustomer, windowWidth - 500, windowHeight/2, 600, 600);
       
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
       if (millis() > orderTimer + orderTime) {
-        room0();
+        if (interactionAllowed) {
+          // Select a random order index
+          const orderIndex = Math.floor(random(orders.length));
+          
+          // Create a new ticket with the selected order
+          const newTicket = new OrderTicket(width / 2, height / 2, 100, 200, orders[orderIndex]);
+          tickets.push(newTicket);
+          room0();
+        }
         orderTimer = millis();
       }
     }
@@ -446,19 +489,37 @@ function mousePressed(){
     placedSquares.push(pickedSquare);
     pickedSquare = null;
   }
+
+  if (interactionAllowed) {
+    // Check if the mouse is pressed inside any ticket
+    for (let i = 0; i < tickets.length; i++) {
+      if (tickets[i].contains(mouseX, mouseY) && tickets[i].canMove()) {
+        tickets[i].startDragging(mouseX, mouseY);
+        break; // Break the loop once we find the first ticket that was clicked
+      }
+    }
+  }
 }
 
+function mouseReleased() {
+  // When the mouse is released, stop dragging for all tickets
+  for (let i = 0; i < tickets.length; i++) {
+    tickets[i].stopDragging();
+  }
+}
 
 function mouseClicked() {
   if(currentRoom === 0) {
+    let isClickedOrder = isInButton(mouseX, mouseY, windowHeight - 350, windowHeight - 350 + 115, 550 - 155 / 2, 550 + 155 / 2);
     for (let i = 0; i < customerArray.length; i++) {
-      if (customerArray[i].orderClicked(mouseX, mouseY)) {
-        roomOrder();
+      if (isClickedOrder) {
+        orderRoom();
         customerArray.splice(i, 1);
         adjustCustomer(i);
         break;
       }
     }
+      // Perform the room transition or any other action you want
   }
   let isClicked1 = isInButton(mouseX, mouseY, windowHeight - 50, windowHeight - 50 + buttonHeight, windowWidth/4 - 40, windowWidth/4 + buttonWidth);
   if(isClicked1) {
@@ -478,10 +539,6 @@ function mouseClicked() {
     room3();
   }
   
-  // let isClickedOrder = isInButton(mouseX, mouseY, windowHeight - 350, windowHeight - 450 + 115, 500, 600);
-  // if(isClickedOrder){
-  //   roomOrder();
-  // }  
 }
 
 
@@ -513,7 +570,7 @@ function room3() {
   background(room3_0);
 }
 
-function roomOrder() {
+function orderRoom() {
   background(room0_0);
   currentRoom = 4;
 }
@@ -606,6 +663,7 @@ class RiceCooker {
 
   takeWhiteRice() {
     if (this.hasWhiteRice) {
+      cookedRice = true;
       this.hasWhiteRice = false;
       this.cookingTime = 0;
       noriArray.push(new Nori(sushi.x, sushi.y, 700, nori));
@@ -648,46 +706,63 @@ class Nori {
   }
 }
 
-class Tickets {
-  constructor(x, y, size, order) {
+class OrderTicket {
+  constructor(x, y, width, height, ingredients) {
     this.x = x;
     this.y = y;
-    this.size = size;
-    this.tickets = tickets;
-    this.orderTime = 0;
-    this.orderDuration = 8000;
-    this.hasTicket = false;
-    this.canTake = false;
-    this.order = order;
-  }
-
-  contains(x, y) {
-    return (
-      x >= this.x - this.size / 2 &&
-      x <= this.x + this.size / 2 &&
-      y >= this.y - this.size / 2 &&
-      y <= this.y + this.size / 2
-    );
-  }
-
-  startOrderTimer() {
-    this.orderTimer = 0;
-    this.hasTicket = ture;
-    this.canTake = false;
-  }
-
-  update() {
-    if(this.hasTicket) {
-      const currentTime = millis() - this.orderTime;
-      if(currentTime >= this.orderDuration) {
-        this.canTake = true;
-      }
-    }
+    this.width = width;
+    this.height = height;
+    this.ingredients = ingredients;
+    this.offsetX = 0;
+    this.offsetY = 0;
+    this.dragging = false;
+    this.moveStartTime = millis();
   }
 
   display() {
-    if(this.canTake) {
-      image(orderTicket, this.x, this.y, 200, 400);
+    // Draw the ticket as a rectangle
+    image(orderTicket, this.x, this.y, this.width, this.height);
+
+    // Display the ingredients
+    fill(0);
+    textAlign(CENTER, TOP);
+    for (let i = 0; i < this.ingredients.length; i++) {
+      text(this.ingredients[i], this.x + this.width / 2, this.y + i * 15 + this.height / 3);
+    }
+  }
+
+  contains(px, py) {
+    return (
+      px > this.x &&
+      px < this.x + this.width &&
+      py > this.y &&
+      py < this.y + this.height
+    );
+  }
+
+  canMove() {
+    // Check if enough time has passed since the ticket was spawned
+    return millis() - this.moveStartTime > ticketDelay;
+  }
+
+  startDragging(mx, my) {
+    if (this.contains(mx, my) && this.canMove()) {
+      this.dragging = true;
+      this.offsetX = mx - this.x;
+      this.offsetY = my - this.y;
+    }
+  }
+
+  stopDragging() {
+    this.dragging = false;
+    // Move the ticket to the top when released
+    this.y = 10;
+  }
+
+  update() {
+    if (this.dragging) {
+      this.x = constrain(mouseX - this.offsetX, 0, width - this.width);
+      this.y = constrain(mouseY - this.offsetY, 0, height - this.height);
     }
   }
 }
@@ -746,9 +821,6 @@ class CustomerEva extends Customerobject {
     }
   }
   
-  orderClicked(mx, my) {
-    return mx, my, windowHeight - 350, windowHeight - 450 + 115, 500, 600
-  }
 }
 
 
@@ -798,4 +870,5 @@ function spawnRiceBowlWhite() {
 function orderButton() {
   fill("white");
   ellipse(550, windowHeight - 350, 155, 115);
+
 }
