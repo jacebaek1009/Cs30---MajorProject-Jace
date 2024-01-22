@@ -211,6 +211,11 @@ function mouseClicked() {
   }
 }
 
+function mouseDragged() {
+  if (isDragging) {
+    sauceBottle.setPosition(mouseX, mouseY);
+  }
+}
 
 function mouseReleased() {
   basketSelected = false;
@@ -227,6 +232,9 @@ function mouseReleased() {
   if(isClicked3) {
     room2();
   }
+
+  isDragging = false;
+  sauceBottle.stopPouring();
 }
 
 function room0() {
