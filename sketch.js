@@ -10,7 +10,6 @@ let startScreen;
 let windowWidth = 1536;
 let windowHeight = 695;
 
-
 let salmon;
 let backg;
 let egg;
@@ -20,7 +19,6 @@ let eggBasket;
 let tofuBasket;
 let salmonBasket;
 let crabBasket;
-
 
 let cookingScore = 0;
 let scoreIncrements = 0.01;
@@ -71,7 +69,6 @@ let riceWhite;
 let whiteRiceNori;
 let riceCookerInstance;
 
-
 let sauceBottle;
 let sauceDroplets = [];
 
@@ -82,12 +79,10 @@ let riceCooker;
 let nori;
 let noriArray = [];
 
-
 let orderArray = [];
 let didOrder = false;
 let tickets = [["white Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"],
               ["brown Rice", "salmon", "crab",  "egg", "duck sauce", "matcha"]];
-
 
 const size = 200;
 const spacing = size + 20;
@@ -110,7 +105,6 @@ let hasIngredient = false;
 function preload() {
   startScreen = loadImage("startscreen.png");
 
-
   room0_0 = loadImage("order-station.png");
   room1_0 = loadImage("cooking station.png");
   room2_0 = loadImage("build.png");
@@ -124,13 +118,11 @@ function preload() {
   tofu = loadImage("tofu.png");
   crab = loadImage("crab.png");
 
-
   salmonBasket = loadImage("salmonBasket.png");
   eggBasket = loadImage("eggbasket.png");
   tofuBasket = loadImage("tofuBasket.png");
   crabBasket = loadImage("crabBasket.png");
   basket = loadImage("basket.png");
-
 
   riceCooker = loadImage("ricePot.png");
  
@@ -190,18 +182,15 @@ function setup() {
   matcha.style("background-color", "green");
   matcha.position(350, 100);
 
-
   mangoTea = createButton("Mango Milk Tea");
   mangoTea.size(200, 50);
   mangoTea.style("background-color", "orange");
   mangoTea.position(600, 100);
 
-
   bSugarTea = createButton("Brown Sugar Milk Tea");
   bSugarTea.size(200, 50);
   bSugarTea.style("background-color", "brown");
   bSugarTea.position(850, 100);
-
 
   taroTea = createButton("Taro Milk Tea");
   taroTea.size(200, 50);
@@ -217,40 +206,217 @@ function setup() {
 
 
 function draw() {  
-  background(startScreen);
-
-
   if (gameState === "start") {
+    background(startScreen);
     strawberryTea.hide();
     matcha.hide();
     mangoTea.hide();
     bSugarTea.hide();
     taroTea.hide();
     drawStartScreen();
-  } 
-  
-  else if (gameState === "playing") {
- 
-      if (level1 && !gaveFood) {
-        if(currentRoom === 0) {
-          room0();
-          strawberryTea.hide();
-          matcha.hide();
-          mangoTea.hide();
-          bSugarTea.hide();
-          taroTea.hide();
+  } else if (gameState === "playing") {
+    if (level1 && !gaveFood) {
+      if(currentRoom === 0) {
+        room0();
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
 
-
-          bottomRect();
-          displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
-          displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
-          displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
-          displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+        bottomRect();
+        displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+        displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+        displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+        displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
         
-          for(const customerEva of customerArray) {
-            customerEva.move();
-            customerEva.draw();
-            customerEva.assignOrder();
+        for(const customerEva of customerArray) {
+          customerEva.move();
+          customerEva.draw();
+          customerEva.assignOrder();
+        }
+      }
+    }
+    else if(currentRoom === 1) {
+      if(roomSwitched) {
+        placedSquares = [];
+      }
+      for (let basket of baskets) {
+        if(basket.remove) {
+          basket.removeFromArray();
+        }
+      }
+      room1();
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
+      if(!switchRoomRice) {
+        for (let nori of noriArray) {
+          nori.display();
+        }
+      }
+      riceCookerInstance.display();
+      strawberryTea.hide();
+      matcha.hide();
+      mangoTea.hide();
+      bSugarTea.hide();
+      taroTea.hide();
+      bottomRect();
+      baskets.push(new Basket(riceWhite.x, riceWhite.y, riceWhite.width, riceWhite.image));
+      for (let basket of baskets) {
+        basket.display();
+      }
+      
+      for (let square of placedSquares) {
+        square.display();
+      }
+      
+      if (pickedSquare) {
+        pickedSquare.update(mouseX, mouseY);
+        pickedSquare.display();
+      }
+      
+      displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+      displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+      displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+
+      displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+
+      roomSwitched = false;
+    }
+    else if(currentRoom === 2) {
+      if(roomSwitched) {
+        placedSquares = [];
+      }
+      for (let basket of baskets) {
+        if(basket.remove) {
+          basket.removeFromArray();
+        }
+      }
+      room2();
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
+      if(cookedRice) {
+        for (let nori of noriArray) {
+          nori.display();
+        }
+        switchRoomRice = true;
+        
+      }
+      roomSwitched = false;
+      strawberryTea.hide();
+      matcha.hide();
+      mangoTea.hide();
+      bSugarTea.hide();
+      taroTea.hide();
+      baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket));
+      for (let basket of baskets) {
+        basket.display();
+      }
+      
+      for (let square of placedSquares) {
+        square.display();
+      }
+      
+      if (pickedSquare) {
+        pickedSquare.update(mouseX, mouseY);
+        pickedSquare.display();
+      }
+      
+      bottomRect();
+      displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+      displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+      displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+      displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+
+      hasIngredient = false;
+      roomSwitched = false;
+    }
+    else if(currentRoom === 3) {
+      room3();
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
+      bottomRect();
+      displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
+      displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
+      displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
+      displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
+      strawberryTea.show();
+      matcha.show();
+      mangoTea.show();
+      bSugarTea.show();
+      taroTea.show(); 
+      strawberryTea.mousePressed(toggleStrawberry);
+      matcha.mousePressed(toggleMatcha);
+      mangoTea.mousePressed(toggleMango);
+      bSugarTea.mousePressed(toggleSugar);
+      taroTea.mousePressed(toggleTaro);
+
+      if (strawberryVisible) {
+        image(strawberryPic,700, 370, 150, 200);
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
+      }
+      if (matchaVisible) {
+        image(matchaPic,700, 370, 150, 200);
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
+      }
+      if (mangoVisible) {
+        image(mangoPic,700, 370, 150, 200);
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
+      }
+      if (bSugarVisible) {
+        image(sugarPic,700, 370, 150, 200);
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
+      }
+      if (taroVisible) {
+        image(taroPic,700, 370, 150, 200);
+        strawberryTea.hide();
+        matcha.hide();
+        mangoTea.hide();
+        bSugarTea.hide();
+        taroTea.hide();
+      }
+    }
+    else if(currentRoom === 4){
+      strawberryTea.hide();
+      matcha.hide();
+      mangoTea.hide();
+      bSugarTea.hide();
+      taroTea.hide();
+      image(demoCustomer, windowWidth - 500, windowHeight/2, 600, 600);
+      
+      for (let i = 0; i < tickets.length; i++) {
+        tickets[i].display();
+        tickets[i].update();
+      }
+      if (millis() > orderTimer + orderTime) {
+        if (interactionAllowed) {
+          // Select a random order index
+          const orderIndex = Math.floor(random(orders.length));
+          
+          if (distance < 0) {
+            nextCustomer.x = currentCustomer.x + currentCustomer.size + 1;
           }
         }
       }
@@ -331,36 +497,38 @@ function draw() {
         mangoTea.hide();
         bSugarTea.hide();
         taroTea.hide();
-        baskets.push(new Basket(width / 4 - 250, height / 3 - 100, 200, eggBasket));
+        baskets.push(new Basket(110, 300, 160, eggBasket));
+        baskets.push(new Basket(330, 285, 180, salmonBasket));
+        baskets.push(new Basket(540, 285, 180, tofuBasket));
         for (let basket of baskets) {
           basket.display();
         }
-      
+        
         for (let square of placedSquares) {
           square.display();
         }
-      
+        
         if (pickedSquare) {
           pickedSquare.update(mouseX, mouseY);
           pickedSquare.display();
         }
-      
+        sauceBottle.display();
+        for (let i = sauceDroplets.length - 1; i >= 0; i--) {
+          sauceDroplets[i].update();
+          sauceDroplets[i].display();
+          if (sauceDroplets[i].isOffScreen()) {
+            sauceDroplets.splice(i, 1);
+          }
+        }
+
         bottomRect();
         displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
         displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
         displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
         displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-
-
-        hasIngredient = false;
-        roomSwitched = false;
       }
       else if(currentRoom === 3) {
         room3();
-        for (let i = 0; i < tickets.length; i++) {
-          tickets[i].display();
-          tickets[i].update();
-        }
         bottomRect();
         displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
         displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
@@ -376,7 +544,6 @@ function draw() {
         mangoTea.mousePressed(toggleMango);
         bSugarTea.mousePressed(toggleSugar);
         taroTea.mousePressed(toggleTaro);
-
 
         if (strawberryVisible) {
           image(strawberryPic,700, 370, 150, 200);
@@ -425,185 +592,18 @@ function draw() {
         mangoTea.hide();
         bSugarTea.hide();
         taroTea.hide();
-        image(demoCustomer, windowWidth - 500, windowHeight/2, 600, 600);
-      
-        for (let i = 0; i < tickets.length; i++) {
-          tickets[i].display();
-          tickets[i].update();
-        }
-        if (millis() > orderTimer + orderTime) {
-          if (interactionAllowed) {
-            // Select a random order index
-            const orderIndex = Math.floor(random(orders.length));
-          
-            if (distance < 0) {
-              nextCustomer.x = currentCustomer.x + currentCustomer.size + 1;
-            }
+  image(demoCustomer, windowWidth - 500, windowHeight/2, 600, 600);
+        
+          if (millis() > orderTimer + orderTime) {
+            room0();
+            orderTimer = millis();
           }
         }
-        else if(currentRoom === 1) {
-          for (let basket of baskets) {
-            if(basket.remove) {
-              basket.removeFromArray();
-            }
-          }
-          room1();
-    for (let nori of noriArray) {
-            nori.display();
-          }
-          riceCookerInstance.display();
-          strawberryTea.hide();
-          matcha.hide();
-          mangoTea.hide();
-          bSugarTea.hide();
-          taroTea.hide();
-          bottomRect();
-          baskets.push(new Basket(riceWhite.x, riceWhite.y, riceWhite.width, riceWhite.image));
-          for (let basket of baskets) {
-            basket.display();
-          }
-        
-          for (let square of placedSquares) {
-            square.display();
-          }
-        
-          if (pickedSquare) {
-            pickedSquare.update(mouseX, mouseY);
-            pickedSquare.display();
-          }
-        
-          displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
-          displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
-          displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
-
-
-          displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-              }
-        else if(currentRoom === 2) {
-          for (let basket of baskets) {
-            if(basket.remove) {
-              basket.removeFromArray();
-            }
-          }
-          room2();
-          roomSwitched = false;
-          strawberryTea.hide();
-          matcha.hide();
-          mangoTea.hide();
-          bSugarTea.hide();
-          taroTea.hide();
-          baskets.push(new Basket(110, 300, 160, eggBasket));
-          baskets.push(new Basket(330, 285, 180, salmonBasket));
-          baskets.push(new Basket(540, 285, 180, tofuBasket));
-          for (let basket of baskets) {
-            basket.display();
-          }
-        
-          for (let square of placedSquares) {
-            square.display();
-          }
-        
-          if (pickedSquare) {
-            pickedSquare.update(mouseX, mouseY);
-            pickedSquare.display();
-          }
-          sauceBottle.display();
-          for (let i = sauceDroplets.length - 1; i >= 0; i--) {
-            sauceDroplets[i].update();
-            sauceDroplets[i].display();
-            if (sauceDroplets[i].isOffScreen()) {
-              sauceDroplets.splice(i, 1);
-            }
-          }
-
-
-          bottomRect();
-          displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
-          displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
-          displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
-          displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-        }
-        else if(currentRoom === 3) {
-          room3();
-          bottomRect();
-          displayButton(windowWidth/4, windowHeight - 50, "lime", "Order Station");
-          displayButton(windowWidth/4 + 300, windowHeight- 50, "", "Cook Station");
-          displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
-          displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
-          strawberryTea.show();
-          matcha.show();
-          mangoTea.show();
-          bSugarTea.show();
-          taroTea.show();
-          strawberryTea.mousePressed(toggleStrawberry);
-          matcha.mousePressed(toggleMatcha);
-          mangoTea.mousePressed(toggleMango);
-          bSugarTea.mousePressed(toggleSugar);
-          taroTea.mousePressed(toggleTaro);
-
-
-          if (strawberryVisible) {
-            image(strawberryPic,700, 370, 150, 200);
-            strawberryTea.hide();
-            matcha.hide();
-            mangoTea.hide();
-            bSugarTea.hide();
-            taroTea.hide();
-          }
-          if (matchaVisible) {
-            image(matchaPic,700, 370, 150, 200);
-            strawberryTea.hide();
-            matcha.hide();
-            mangoTea.hide();
-            bSugarTea.hide();
-            taroTea.hide();
-          }
-          if (mangoVisible) {
-            image(mangoPic,700, 370, 150, 200);
-            strawberryTea.hide();
-            matcha.hide();
-            mangoTea.hide();
-            bSugarTea.hide();
-            taroTea.hide();
-          }
-          if (bSugarVisible) {
-            image(sugarPic,700, 370, 150, 200);
-            strawberryTea.hide();
-            matcha.hide();
-            mangoTea.hide();
-            bSugarTea.hide();
-            taroTea.hide();
-          }
-          if (taroVisible) {
-            image(taroPic, 700, 370, 150, 200);//600, 290, 350, 300);
-            strawberryTea.hide();
-            matcha.hide();
-            mangoTea.hide();
-            bSugarTea.hide();
-            taroTea.hide();
-          }
-        }
-        else if(currentRoom === 4){
-          strawberryTea.hide();
-          matcha.hide();
-          mangoTea.hide();
-          bSugarTea.hide();
-          taroTea.hide();
-    image(demoCustomer, windowWidth - 500, windowHeight/2, 600, 600);
-        
-            if (millis() > orderTimer + orderTime) {
-              room0();
-              orderTimer = millis();
-            }
-          }
-        }
-        riceCookerInstance.update();
-        ordersDone++;
+      }
+      riceCookerInstance.update();
+      ordersDone++; 
     }
   }
-
-
-
 
 
 
@@ -731,7 +731,6 @@ function mousePressed(){
   }
 }
 
-
 function drawStartScreen() {
   fill(255);
   textSize(100);
@@ -742,11 +741,9 @@ function drawStartScreen() {
   text("START GAME", width / 2 + 25, height / 2 + 130);
 }
 
-
 function startGame() {
   gameState = "playing";
 }
-
 
 function mouseClicked() {
 if(currentRoom === 0) {
@@ -820,12 +817,10 @@ function room3() {
   background(room3_0);
 }
 
-
 function roomOrder() {
   background(room0_0);
   currentRoom = 4;
   }
-
 
   class SauceBottle {
     constructor(x, y) {
@@ -857,7 +852,6 @@ function roomOrder() {
       );
     }
   }
-
 
   class SauceDroplet {
     constructor(x, y) {
@@ -1111,7 +1105,6 @@ class Tickets {
     this.order = order;
   }
 
-
   contains(x, y) {
     return (
       x >= this.x - this.size / 2 &&
@@ -1121,13 +1114,11 @@ class Tickets {
     );
   }
 
-
   startOrderTimer() {
     this.orderTimer = 0;
     this.hasTicket = ture;
     this.canTake = false;
   }
-
 
   update() {
     if(this.hasTicket) {
@@ -1137,7 +1128,6 @@ class Tickets {
       }
     }
   }
-
 
   display() {
     if(this.canTake) {
