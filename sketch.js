@@ -133,8 +133,7 @@ function setup() {
   
   sushi = spawnSushi();
   riceWhite = spawnRiceBowlWhite();
-  
-  
+ 
   let predict = new HowTo(windowWidth - 500, windowHeight/2, 50, 50, 5);
   howToArray.push(predict);
   
@@ -347,13 +346,7 @@ function draw() {
       bSugarTea.hide();
       taroTea.hide();
       image(demoCustomer, windowWidth - 500, windowHeight/2, 600, 600);
-      new Tickets(windowWidth - 800, windowHeight/2);
-      for (let order of orderArray) {
-        order.startOrderTimer();
-        order.update();
-        order.display();
-      }
-
+      
       if (millis() > orderTimer + orderTime) {
         room0();
         orderTimer = millis();
@@ -656,13 +649,16 @@ class Nori {
 }
 
 class Tickets {
-  constructor(x, y, size) {
+  constructor(x, y, size, order) {
     this.x = x;
     this.y = y;
     this.size = size;
     this.tickets = tickets;
     this.orderTime = 0;
     this.orderDuration = 8000;
+    this.hasTicket = false;
+    this.canTake = false;
+    this.order = order;
   }
 
   contains(x, y) {
@@ -676,7 +672,7 @@ class Tickets {
 
   startOrderTimer() {
     this.orderTimer = 0;
-    this.hasTicket = false;
+    this.hasTicket = ture;
     this.canTake = false;
   }
 
@@ -691,7 +687,7 @@ class Tickets {
 
   display() {
     if(this.canTake) {
-      image(orderTicket, mouseX, mouseY, 200, 400);
+      image(orderTicket, this.x, this.y, 200, 400);
     }
   }
 }
