@@ -1224,5 +1224,4 @@ function spawnRiceBowlWhite() {
 function orderButton() {
   fill("white");
   ellipse(550, windowHeight - 350, 155, 115);
-
 }
