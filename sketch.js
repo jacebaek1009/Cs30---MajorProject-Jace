@@ -15,7 +15,7 @@ let salmonBasket;
 
 let buildingScore1;
 let buildingScore2 = 100;
-let cookingScore = 0;
+let cookingScore = 100;
 let scoreIncrements = 0.01;
 let orderTicket;
 
@@ -79,6 +79,9 @@ let interactionAllowed = true;
 let startTime;
 let ticketDelay = 8000;
 let createdIngredients = [];
+
+let finalRoomStart;
+let finalRoom = 5000;
 
 const size = 200;
 const spacing = size + 20;
@@ -450,6 +453,9 @@ function draw() {
 
       else if(currentRoom === 5) {
         endRoom();
+        if (millis() > orderTimer + orderTime) {
+          room0();
+        }
         image(sushiDone, windowWidth /2, windowHeight /2, 200, 200);
         if (strawberryVisible) {
           image(strawberryPic,windowWidth /2 - 40, windowHeight / 2, 150, 200);
@@ -498,7 +504,13 @@ function draw() {
         else {
           buildingScore1 = 50;
         }
-        
+        fill(150, 200, 250); 
+        rect(50, 50, 300, 300); 
+      
+        fill(0); 
+        textSize(24); 
+        textAlign(CENTER, CENTER); 
+        text(cookingScore, 200, 200);
       } 
     }
     riceCookerInstance.update();
