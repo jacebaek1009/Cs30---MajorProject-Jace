@@ -1,9 +1,6 @@
 // EJ's Sushiria
 // Ieva Malezhyk and Jace Baek
-// Date
-//
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// 20/01/2024
 
 let salmon;
 let backg;
@@ -71,7 +68,7 @@ let cookedRice = false;
 let switchRoomRice = false;
 
 let didOrder = false;
-const order1 = ["white rice", "egg","egg","egg", "egg", "egg", "matcha tea"];
+const orders = ["white rice", "egg","egg","egg", "egg", "egg", "matcha tea"];
              
 const order2 = ["white rice", "salmon", "strawberry tea"];
 let tickets = [];
@@ -207,12 +204,12 @@ function draw() {
     taroTea.hide();
     completeRoom.hide();
   }
-  if (gameState === "level1") {
+  if (gameState === "level1") {  // Level 1 gameplay
     if (level1 && !gaveFood) {
       if(currentRoom === 0) {
         room0();
         interactionAllowed = true;
-        for (let i = 0; i < tickets.length; i++) {
+        for (let i = 0; i < tickets.length; i++) {  // Display and update order tickets
           tickets[i].display();
           tickets[i].update();
         }
@@ -229,7 +226,7 @@ function draw() {
         displayButton(windowWidth/4 + 600, windowHeight- 50, "orange", "Build Station");
         displayButton(windowWidth/4 + 900, windowHeight- 50, "purple", "Tea Station");
         
-        for(const customerEva of customerArray) {
+        for(const customerEva of customerArray) {  // Move and draw customers
           customerEva.move();
           customerEva.draw();
           customerEva.assignOrder();
@@ -238,7 +235,7 @@ function draw() {
         if(didOrder) {
           orderButton();
         }
-        for (let i = 0; i < customerArray.length - 1; i++) {
+        for (let i = 0; i < customerArray.length - 1; i++) { // Prevent customers from overlapping
           const currentCustomer = customerArray[i];
           const nextCustomer = customerArray[i + 1];
           const distance = nextCustomer.x - (currentCustomer.x + currentCustomer.size);
@@ -252,7 +249,7 @@ function draw() {
         if(roomSwitched) {
           placedSquares = [];
         }
-        for (let basket of baskets) {
+        for (let basket of baskets) { // Remove baskets marked for removal
           if(basket.remove) {
             basket.removeFromArray();
           }
@@ -263,7 +260,7 @@ function draw() {
           tickets[i].update();
         }
         if(!switchRoomRice) {
-          for (let nori of noriArray) {
+          for (let nori of noriArray) { // Display nori if not switching rooms
             nori.display();
           }
         }
@@ -432,7 +429,8 @@ function draw() {
         taroTea.hide();
         orderRoom();
         image(demoCustomer, windowWidth - 500, windowHeight/2, 600, 600);
-        
+
+          // Display and update order tickets
         for (let i = 0; i < tickets.length; i++) {
           tickets[i].display();
           tickets[i].update();
@@ -442,7 +440,7 @@ function draw() {
             // Select a random order index
             const orderIndex = Math.floor(random(orders.length));
             
-            // Create a new ticket with the selected order
+          // Check if it's time to generate a new order
             const newTicket = new OrderTicket(width / 2, height / 2, 100, 200, orders[orderIndex]);
             tickets.push(newTicket);
             room0();
@@ -453,9 +451,9 @@ function draw() {
 
       else if(currentRoom === 5) {
         endRoom();
-        if (millis() > orderTimer + orderTime) {
+        if (millis() > orderTimer + orderTime) {  // Check if it's time to transition to room0
           room0();
-        }
+        }  // Display sushi images based on ingredient visibility
         image(sushiDone, windowWidth /2, windowHeight /2, 200, 200);
         if (strawberryVisible) {
           image(strawberryPic,windowWidth /2 - 40, windowHeight / 2, 150, 200);
@@ -497,7 +495,7 @@ function draw() {
           bSugarTea.hide();
           taroTea.hide();
         }
-        const result = compareArrays(order1, createdIngredients) 
+        const result = compareArrays(orders, createdIngredients) 
         if(result === 1) {
           buildingScore1 = 100;
         }
@@ -660,7 +658,6 @@ function mousePressed(){
       if(basket.image === tofuBasket) {
         if (basket.contains(mouseX, mouseY)) {
           if (pickedSquare && pickedSquare.image === tofu) {
-            // Check if the basket contains the same ingredient as the one in hand
             pickedSquare.release();
             pickedSquare = null;
             hasIngredient = false;
@@ -686,7 +683,6 @@ function mousePressed(){
       if(basket.image === salmonBasket) {
         if (basket.contains(mouseX, mouseY)) {
           if (pickedSquare && pickedSquare.image === salmon) {
-            // Check if the basket contains the same ingredient as the one in hand
             pickedSquare.release();
             pickedSquare = null;
             hasIngredient = false;
@@ -751,7 +747,7 @@ function mouseClicked() {
           break;
         }
       }
-        // Perform the room transition or any other action you want
+        //  the room transition or any other action 
     }
   }
 
@@ -826,7 +822,7 @@ function startRoom() {
   textSize(50);
   text("START GAME", width / 2 + 25, height / 2 + 130);
 }
-
+//classes
 class SauceBottle {
   constructor(x, y) {
     this.x = 900;
@@ -1015,9 +1011,9 @@ class Nori {
   }
 
   createEggSquares() {
-    const squareSize = 80; // Adjust the size of each square
+    const squareSize = 80; 
     const numSquares = 5;
-    const spacing = 70; // Adjust the spacing between squares
+    const spacing = 70; 
 
     for (let i = 0; i < numSquares; i++) {
       const squareX = this.x - this.size / 2 + i * (squareSize + spacing);
@@ -1029,7 +1025,7 @@ class Nori {
   display() {
     image(this.image, this.x, this.y, this.size, this.size);
     for (const square of this.eggSquares) {
-      fill(255, 255, 0, 150); // Yellow with some transparency
+      fill(255, 255, 0, 150); 
       rectMode(CENTER);
       const shiftedX = square.x + 400;
       const shiftY = square.y + 250;
@@ -1054,7 +1050,6 @@ class Nori {
 
       if (closestSquare) {
         console.log("Ingredient placed near a square! Distance:", closestDistance);
-        // Additional actions based on the egg placement
       }
     }
   }
@@ -1067,7 +1062,6 @@ class EggRef {
   }
 
   contains(px, py) {
-    // Check if the point (px, py) is within the square
     return (
       px >= this.x - this.size / 2 &&
       px <= this.x + this.size / 2 &&
@@ -1091,17 +1085,14 @@ class OrderTicket {
   }
 
   display() {
-    // Draw the ticket as a rectangle
     image(orderTicket, this.x, this.y, this.width, this.height);
-
-    // Display the ingredients
     fill(0);
-    textSize(20);
+    textSize(10);
     textAlign(CENTER, TOP);
     for (let i = 0; i < this.ingredients.length; i++) {
-      text(this.ingredients[i], this.x + this.width / 2, this.y + i * 15 + this.height / 3);
+      text(this.ingredients[i], this.x + this.width / 2, this.y + (i + 1) * 15 + this.height / 3);
     }
-  }
+    }
 
   contains(px, py) {
     return (
@@ -1177,7 +1168,7 @@ class CustomerEva extends Customerobject {
   
 }
 
-
+// Function to display a button with text
 function displayButton(x, y, color, say) {
   fill(color);
   ellipse(x, y, buttonWidth, buttonHeight);
@@ -1187,7 +1178,7 @@ function displayButton(x, y, color, say) {
   textAlign(CENTER, CENTER);
   text(say, x, y);
 }
-
+// Function to check if a point (x, y) is within a button area
 function isInButton(x, y, top, bottom, left, right, padding = 20) {
   return x >= left - padding && x <= right + padding && (y <= bottom + padding && y >= top - padding);
 }
@@ -1199,7 +1190,7 @@ function bottomRect() {
 
 
 
-function spawnSushi() {
+function spawnSushi() {// Function to spawn a sushi object
   let sushi = {
     x: windowWidth - 1000,
     y: windowHeight - 900,
@@ -1210,6 +1201,7 @@ function spawnSushi() {
   return sushi;
 }
 
+// Function to spawn a white rice bowl object
 function spawnRiceBowlWhite() {
   let riceWhite = {
     x: windowWidth - 1200,
@@ -1224,4 +1216,5 @@ function spawnRiceBowlWhite() {
 function orderButton() {
   fill("white");
   ellipse(550, windowHeight - 350, 155, 115);
+
 }
